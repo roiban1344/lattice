@@ -1,0 +1,28 @@
+---
+// (a, b) = ((x,x), (v,v)) の表。R のノルム (a+b)/2 が 8 以下になる組のうち、どれが残るか。マスに触れると理由。
+const vals = [0, 2, 4, 6, 8, 10, 12, 14, 16], s = 38, pad = 44, W = pad + vals.length * s + 8, H = pad + vals.length * s + 26;
+function info(a: number, b: number): [string, string] {
+  if (a === 0 && b === 0) return ['zero', '零ベクトル'];
+  if (a === 0 || b === 0) return ['zero', '片方が 0 ならもう片方は 2L に入り、ノルムは 24 以上。z のノルムは 12 以上'];
+  if (a < 6 || b < 6) return ['minL', `L にノルム ${Math.min(a, b)} の非零ベクトルはない（min L = 6）`];
+  if ((a + b) % 4 === 2) return ['parity', `(a+b)/2 = ${(a + b) / 2} は奇数。R は偶格子なので不可能`];
+  return ['live', `残る型。z のノルムは ${(a + b) / 2}`];
+}
+const sym: Record<string, string> = { zero: '0', minL: '<6', parity: '奇', live: '残る' };
+---
+<svg viewBox={`0 0 ${W} ${H}`} class="block h-auto w-full max-w-[30rem] font-mono" role="img" aria-label="(a, b) 型の表">
+  <text x={pad + (vals.length * s) / 2} y="12" text-anchor="middle" font-size="11" fill="rgb(var(--muted))">b = (v, v)</text>
+  <text x="10" y={pad + (vals.length * s) / 2} text-anchor="middle" font-size="11" fill="rgb(var(--muted))" transform={`rotate(-90 10 ${pad + (vals.length * s) / 2})`}>a = (x, x)</text>
+  {vals.map((v, k) => <g><text x={pad + k * s + s / 2} y={pad - 8} text-anchor="middle" font-size="11" fill="rgb(var(--muted))">{v}</text><text x={pad - 8} y={pad + k * s + s / 2 + 4} text-anchor="end" font-size="11" fill="rgb(var(--muted))">{v}</text></g>)}
+  {vals.map((a, i) => vals.map((b, j) => {
+    const x = pad + j * s, y = pad + i * s;
+    if (a + b > 16) return <rect x={x + 1} y={y + 1} width={s - 2} height={s - 2} rx="3" fill="none" stroke="rgb(var(--rule))" stroke-dasharray="2 3" />;
+    const [kind, why] = info(a, b), live = kind === 'live';
+    return <g>
+      <title>{`(${a}, ${b}): ${why}`}</title>
+      <rect x={x + 1} y={y + 1} width={s - 2} height={s - 2} rx="3" fill={live ? 'rgb(var(--accent))' : 'rgb(var(--heat-mid))'} stroke={live ? 'rgb(var(--accent))' : 'rgb(var(--rule))'} />
+      <text x={x + s / 2} y={y + s / 2 + 4} text-anchor="middle" font-size={live ? 10 : 11} fill={live ? 'rgb(var(--sheet))' : 'rgb(var(--muted))'}>{sym[kind]}</text>
+    </g>;
+  }))}
+  <text x={pad} y={H - 4} font-size="10" fill="rgb(var(--muted))">点線のマス: a + b &gt; 16（z のノルム 10 以上）</text>
+</svg>

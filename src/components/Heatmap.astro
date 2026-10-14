@@ -1,0 +1,67 @@
+---
+// 整数行列のヒートマップ。正は赤、負は青、0 は灰。濃さは |値| / 最大 の平方根。マスに触れると位置と値。
+interface Props { src: string; label: string; blocks?: number; caption?: string }
+const { src, label, blocks = 0, caption } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<figure class="heat grid min-w-0 gap-2" data-src={`${base}${src}`} data-blocks={blocks}>
+  <figcaption class="note">{label}</figcaption>
+  <div class="relative">
+    <canvas class="block h-auto w-full border border-rule bg-[rgb(var(--heat-mid))] [image-rendering:pixelated] [touch-action:none]" role="img" aria-label={`${label} のヒートマップ`}></canvas>
+    <div class="tip pointer-events-none absolute whitespace-nowrap rounded bg-ink px-2 py-0.5 font-mono text-[.8125rem] text-paper" hidden style="transform:translate(-50%,calc(-100% - 10px))"></div>
+  </div>
+  <div class="legend flex flex-wrap items-center gap-2 font-mono text-[.8125rem] text-muted"></div>
+  {caption && <p class="note" set:html={caption} />}
+</figure>
+
+<script>
+  type Mat = number[][];
+  const rgb = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim().split(/\s+/).map(Number);
+  const mix = (a: number[], b: number[], t: number) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+
+  function draw(fig: HTMLElement, M: Mat, hl?: [number, number]) {
+    const canvas = fig.querySelector('canvas')!, N = M.length, k = Math.max(3, Math.ceil(560 / N));
+    canvas.width = canvas.height = N * k;
+    const pos = rgb('--heat-pos'), neg = rgb('--heat-neg'), mid = rgb('--heat-mid'), ink = rgb('--ink');
+    const max = Math.max(1, ...M.flat().map(Math.abs));
+    const ctx = canvas.getContext('2d')!, img = ctx.createImageData(N * k, N * k), d = img.data;
+    for (let i = 0; i < N; i++)
+      for (let j = 0; j < N; j++) {
+        const v = M[i][j], c = v === 0 ? mid : mix(mid, v > 0 ? pos : neg, 0.15 + 0.85 * Math.sqrt(Math.abs(v) / max));
+        for (let a = 0; a < k; a++) {
+          let p = ((i * k + a) * N * k + j * k) * 4;
+          for (let b = 0; b < k; b++, p += 4) { d[p] = c[0]; d[p + 1] = c[1]; d[p + 2] = c[2]; d[p + 3] = 255; }
+        }
+      }
+    ctx.putImageData(img, 0, 0);
+    ctx.strokeStyle = `rgb(${ink.join(',')})`;
+    const blocks = Number(fig.dataset.blocks || 0);
+    if (blocks) {
+      ctx.lineWidth = Math.max(1, k / 3);
+      ctx.beginPath(); ctx.moveTo(blocks * k, 0); ctx.lineTo(blocks * k, N * k); ctx.moveTo(0, blocks * k); ctx.lineTo(N * k, blocks * k); ctx.stroke();
+    }
+    if (hl) { ctx.lineWidth = Math.max(1, k / 4); ctx.strokeRect(hl[1] * k, hl[0] * k, k, k); }
+    const fmt = (x: number) => x.toLocaleString('en-US');
+    fig.querySelector('.legend')!.innerHTML =
+      `<span>−${fmt(max)}</span><span style="width:10rem;height:.6rem;border-radius:2px;background:linear-gradient(90deg,rgb(${neg}),rgb(${mid}),rgb(${pos}))"></span><span>+${fmt(max)}</span><span>（0 は灰）</span>`;
+  }
+
+  for (const fig of document.querySelectorAll<HTMLElement>('figure.heat')) {
+    fetch(fig.dataset.src!).then((r) => r.json()).then((M: Mat) => {
+      draw(fig, M);
+      const canvas = fig.querySelector('canvas')!, tip = fig.querySelector<HTMLElement>('.tip')!, N = M.length;
+      canvas.addEventListener('pointermove', (e) => {
+        const r = canvas.getBoundingClientRect();
+        const j = Math.floor(((e.clientX - r.left) / r.width) * N), i = Math.floor(((e.clientY - r.top) / r.height) * N);
+        if (i < 0 || j < 0 || i >= N || j >= N) return;
+        tip.textContent = `行 ${i + 1}, 列 ${j + 1}: ${M[i][j]}`;
+        tip.style.left = `${e.clientX - r.left}px`; tip.style.top = `${e.clientY - r.top}px`; tip.hidden = false;
+        draw(fig, M, [i, j]);
+      });
+      canvas.addEventListener('pointerleave', () => { tip.hidden = true; draw(fig, M); });
+      const redraw = () => draw(fig, M);
+      matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw);
+      new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    });
+  }
+</script>

@@ -1,0 +1,40 @@
+---
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+
+interface Props { title: string; description?: string }
+const { title, description } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const nav = [
+  { href: base, label: '索引' },
+  { href: `${base}primer/`, label: '前提' },
+  { href: `${base}r112/`, label: '112 次元の候補' },
+];
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+  </head>
+  <body>
+    <header class="border-b border-rule">
+      <nav class="mx-auto flex max-w-wide flex-wrap items-baseline gap-x-6 gap-y-1 px-4 py-3 text-[.8125rem]" aria-label="サイト">
+        <a href={base} class="font-display text-base font-extrabold text-ink no-underline">格子ノート</a>
+        {nav.map((n) => <a href={n.href} class="text-muted no-underline hover:text-accent">{n.label}</a>)}
+        <a href="https://github.com/roiban1344/lattice" class="ml-auto text-muted no-underline hover:text-accent">GitHub</a>
+      </nav>
+    </header>
+    <main class="mx-auto max-w-wide px-4 pb-24 pt-10">
+      <slot />
+    </main>
+    <footer class="mx-auto max-w-wide px-4 pb-10 note">
+      探索・コード・計算・文章の大部分は AI（Anthropic の Claude）による。方向づけと公開の責任は roiban1344。文章とデータは CC BY 4.0。
+    </footer>
+  </body>
+</html>

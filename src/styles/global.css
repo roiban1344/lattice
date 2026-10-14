@@ -1,0 +1,74 @@
+/* 色の約束: すべて RGB の 3 つ組。Tailwind の bg-paper / text-ink などから使う。明・暗の 2 組。 */
+:root {
+  --paper: 243 245 248;
+  --sheet: 255 255 255;
+  --ink: 20 24 32;
+  --muted: 88 96 112;
+  --rule: 214 219 228;
+  --accent: 31 71 196;
+  --accent-soft: 227 233 251;
+  --ok: 11 125 11;
+  --ok-bg: 226 243 226;
+  --warn: 138 90 0;
+  --warn-bg: 253 240 210;
+  /* ヒートマップ: 正は赤、負は青、0 は灰 */
+  --heat-pos: 227 73 72;
+  --heat-neg: 42 120 214;
+  --heat-mid: 236 238 241;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: 16 19 24; --sheet: 23 27 34; --ink: 231 234 240; --muted: 155 163 178; --rule: 43 49 60;
+    --accent: 142 168 255; --accent-soft: 29 38 64; --ok: 111 211 111; --ok-bg: 21 48 26; --warn: 242 195 91; --warn-bg: 51 40 15;
+    --heat-pos: 230 103 103; --heat-neg: 57 135 229; --heat-mid: 42 46 53;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --paper: 16 19 24; --sheet: 23 27 34; --ink: 231 234 240; --muted: 155 163 178; --rule: 43 49 60;
+  --accent: 142 168 255; --accent-soft: 29 38 64; --ok: 111 211 111; --ok-bg: 21 48 26; --warn: 242 195 91; --warn-bg: 51 40 15;
+  --heat-pos: 230 103 103; --heat-neg: 57 135 229; --heat-mid: 42 46 53;
+  color-scheme: dark;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { @apply bg-paper text-ink font-body leading-[1.85]; }
+  h1, h2, h3 { @apply font-display; text-wrap: balance; }
+  a { @apply text-accent underline-offset-4; }
+  /* grid の子が中身の最小幅で広がり、狭い画面で横にはみ出すのを防ぐ */
+  .grid > * { min-width: 0; }
+  :focus-visible { @apply outline outline-2 outline-offset-2 outline-accent; }
+}
+@layer components {
+  /* Markdown の本文。typography の色を CSS 変数に結ぶ */
+  .prose-lat {
+    @apply prose max-w-prose;
+    --tw-prose-body: rgb(var(--ink)); --tw-prose-headings: rgb(var(--ink)); --tw-prose-links: rgb(var(--accent));
+    --tw-prose-bold: rgb(var(--ink)); --tw-prose-bullets: rgb(var(--muted)); --tw-prose-counters: rgb(var(--muted));
+    --tw-prose-code: rgb(var(--ink)); --tw-prose-hr: rgb(var(--rule)); --tw-prose-quotes: rgb(var(--ink));
+    --tw-prose-quote-borders: rgb(var(--rule)); --tw-prose-th-borders: rgb(var(--rule)); --tw-prose-td-borders: rgb(var(--rule));
+    line-height: 1.85;
+  }
+  .prose-lat :where(h2) { @apply font-display font-extrabold text-[2.125rem] leading-tight mt-0; }
+  .prose-lat :where(h3) { @apply font-display font-semibold; }
+  .prose-lat :where(code)::before, .prose-lat :where(code)::after { content: none; }
+  .prose-lat .katex-display { overflow-x: auto; overflow-y: hidden; padding-block: .25rem; }
+  .chip { @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-2 text-[.8125rem] leading-6 not-italic; }
+  .chip-exact { @apply chip border-ok text-ok bg-ok-bg; }
+  .chip-float { @apply chip border-warn text-warn bg-warn-bg; }
+  .chip-hand { @apply chip border-muted text-muted; }
+  .chip-priv { @apply chip border-dashed border-muted text-muted; }
+  .chip-cand { @apply chip border-accent text-accent bg-accent-soft; }
+  .panel { @apply rounded-md border border-rule bg-sheet p-4; }
+  .tbl { @apply w-full border-collapse text-[.8125rem] leading-relaxed; }
+  .tbl th { @apply whitespace-nowrap border-b border-rule px-3 py-2 text-left font-bold text-muted; }
+  .tbl td { @apply border-b border-rule px-3 py-2 align-top; }
+  .tbl tr:last-child td { @apply border-b-0; }
+  .tbl .num { @apply whitespace-nowrap text-right font-mono tabular-nums; }
+  .note { @apply text-[.8125rem] leading-relaxed text-muted; }
+}

@@ -1,0 +1,211 @@
+---
+import Base from '../../layouts/Base.astro';
+import Heatmap from '../../components/Heatmap.astro';
+import SiegelChart from '../../components/SiegelChart.astro';
+import OrbitChart from '../../components/OrbitChart.astro';
+import TypeGrid from '../../components/TypeGrid.astro';
+import { Content as Claim } from '../../sections/r112/claim.md';
+import { Content as Matrices } from '../../sections/r112/matrices.md';
+import { Content as Group } from '../../sections/r112/group.md';
+import { Content as Theta } from '../../sections/r112/theta.md';
+import { Content as Reduce } from '../../sections/r112/reduce.md';
+import { Content as Certificate } from '../../sections/r112/certificate.md';
+import { Content as Orbits } from '../../sections/r112/orbits.md';
+import { Content as Budget } from '../../sections/r112/budget.md';
+import { Content as Weak } from '../../sections/r112/weak.md';
+import { basicChecks, pub, PUB_REPO, PUB_SHA } from '../../lib/r112';
+import { bernoulli, extremalTheta, siegelMean } from '../../lib/lattice';
+import { tex } from '../../lib/tex';
+import { steps, classes, orbitRows, heavy, checks } from '../../data/r112';
+import { refs } from '../../data/refs';
+
+const chip = { exact: '<span class="chip-exact">✓ 整数で厳密</span>', float: '<span class="chip-float">≈ 浮動小数点</span>', hand: '<span class="chip-hand">✎ 論証</span>', todo: '<span class="chip-hand">未実施</span>' };
+const fmt = (v: number | bigint) => v.toLocaleString('en-US');
+const basic = basicChecks();
+const th56 = extremalTheta(56, 6), th112 = extremalTheta(112, 8);
+const B = bernoulli(82);
+const S = (n: number) => siegelMean(n, B);
+const S112 = S(112);
+const budget = [
+  { name: String.raw`Leech 格子 $\Lambda_{24}$`, n: 24, w: 8315553613086720000, wText: String.raw`$|\mathrm{Co}_0|\approx 8.3\times10^{18}$`, real: '極値（一意）' },
+  { name: String.raw`$\Gamma_{72}$`, n: 72, w: 5241600, wText: String.raw`5,241,600（カタログの部分群）`, real: '極値 [Neb12]' },
+  { name: String.raw`96 次元に同じ群`, n: 96, w: 24360, wText: String.raw`$|\mathrm{SL}_2(29)|=24{,}360$`, real: '（仮想）' },
+  { name: String.raw`$R$、群 $\mathrm{SL}_2(29)$`, n: 112, w: 24360, wText: '24,360', real: '主張: 極値' },
+  { name: String.raw`$R$、既知の自己同型`, n: 112, w: 584640, wText: '584,640', real: '主張: 極値' },
+].map((r) => ({ ...r, S: S(r.n), lambda: S(r.n) / r.w }));
+const sci = (v: number) => {
+  if (v === 0) return '0';
+  const e = Math.floor(Math.log10(Math.abs(v)));
+  return Math.abs(e) >= 4 ? String.raw`$${(v / 10 ** e).toFixed(2)}\times10^{${e}}$` : v >= 100 ? fmt(Math.round(v)) : v.toPrecision(3);
+};
+const expm = (l: number) => (l > 50 ? String.raw`$e^{-${Math.round(l)}}$` : l < 1e-4 ? String.raw`$\approx 1$` : Math.exp(-l).toPrecision(2));
+const work = (p: string) => `<code class="text-[.75rem]">${p}</code>`;
+const T = [
+  tex(String.raw`112 次元の偶ユニモジュラー格子 $R$ の具体的な構成。計算した範囲では、ノルム 10 未満の非零ベクトルなし。正しければ極値格子で、これまでの最高次元 88 の更新。`),
+  tex(String.raw`$L$ での跡`),
+  tex(String.raw`青いマスが残る 4 型。「0」は片方が零、「<6」は $\min L=6$ に反する、「奇」は偶格子に反する組。`),
+  tex(String.raw`$L$ の 3 行では見積もりと実際がほぼ重なる（正則な軌道ばかりのため）。下の 2 行が $R$。どちらも見積もりは約 2 軌道、実際は外れで 12、当たりで 0。`),
+  tex(String.raw`Siegel 平均 $S(n)$（対数目盛）`),
+  tex(String.raw`$n$`),
+  tex(String.raw`$S(n)$`),
+  tex(String.raw`群の位数 $w$`),
+  tex(String.raw`$\lambda=S/w$`),
+  tex(String.raw`$R$ の「既知の自己同型」は $\mathrm{SL}_2(29)$ の対角作用と、階数 2 のエルミート格子のユニタリ自己同型 48 個から生成される群（$-1$ を共有）。全体の自己同型群は未決定。`),
+  tex(String.raw`確かめたのは 3 つの AI セッションで、人間の専門家はまだ誰も見ていない。<code>retro-1013</code> が最初の組み立て、<code>init</code> が同じ考え方の別コード、3 つ目のセッション（2026-10-14）は公開した 4 ファイルだけからコードを一から。3 つ目のセッションは作業ノートの誤記を 1 つ指摘（剰余類のノルムは $\equiv 2 \pmod 4$ なので「2.5 か 3.0」は「2.5 か 3.5」）。結論に影響なし。`),
+];
+---
+<Base title="R₁₁₂ — 112 次元の候補" description="112 次元の極値偶ユニモジュラー格子の候補 R の論証を、易しい順に図と要点で辿るページ。">
+  <article class="grid gap-14">
+    <header class="grid max-w-[52rem] gap-5">
+      <p class="note tracking-[.12em]">極値偶ユニモジュラー格子 · 112 次元の候補 · 2026-10-15 版</p>
+      <h1 class="text-[2.875rem] font-extrabold leading-tight">R<sub class="text-[.55em]">112</sub></h1>
+      <p class="text-[1.1875rem] leading-[1.9]" set:html={T[0]} />
+      <p class="flex flex-wrap gap-2"><span class="chip-cand">◇ 候補</span><span class="chip-hand">査読なし・専門家の確認なし</span></p>
+      <dl class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {[['112', '次元'], ['det = 1', 'ユニモジュラー'], ['min = 10', '主張（上界と一致）'], ['88', 'これまでの最高次元 [Sak26]']].map(([v, l]) => (
+          <div class="grid gap-0.5 border-t-2 border-ink pt-2"><dt class="font-mono text-[1.1875rem]">{v}</dt><dd class="note">{l}</dd></div>
+        ))}
+      </dl>
+      <p class="note">データとコードの本体: <a href={PUB_REPO}>公開リポジトリ</a>（コミット <code>{PUB_SHA.slice(0, 7)}</code>）。前提の用語は <a href={`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}primer/`}>前提</a> のページ。</p>
+    </header>
+
+    <section class="grid gap-4" id="claim">
+      <h2 class="text-[2.125rem] font-extrabold">主張</h2>
+      <div class="prose-lat"><Claim /></div>
+    </section>
+
+    <section class="grid gap-4" id="map">
+      <h2 class="text-[2.125rem] font-extrabold">論証の地図</h2>
+      <p class="max-w-prose">公開リポジトリの <a href={pub('README.ja.md#4-論証の10ステップ')}>README §4</a> と同じ番号。札の意味: <Fragment set:html={chip.exact} /> は丸め誤差のない計算、<Fragment set:html={chip.float} /> は内部で浮動小数点の枝刈りを使う計算、<Fragment set:html={chip.hand} /> は手で追える議論。<strong>計算で確かめたことは証明ではない。</strong>特に「短いベクトルが見つからなかった」は「存在しない」の証明にならない。</p>
+      <ol class="max-w-prose border-t border-rule">
+        {steps.map((s) => (
+          <li class="grid grid-cols-[2.2rem_minmax(0,1fr)] gap-x-3 gap-y-1 border-b border-rule py-3 sm:grid-cols-[2.2rem_minmax(0,1fr)_auto]">
+            <span class="font-mono text-accent">{s.no}</span>
+            <span>{s.anchor ? <a href={`#${s.anchor}`} class="text-ink no-underline hover:underline" set:html={tex(s.text)} /> : <Fragment set:html={tex(s.text)} />}</span>
+            <span class="col-start-2 flex flex-wrap items-start gap-1 sm:col-start-3 sm:justify-end" set:html={s.kind.map((k) => chip[k]).join('')} />
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="grid gap-5" id="matrices">
+      <div class="prose-lat"><Matrices /></div>
+      <div class="grid gap-6 sm:grid-cols-2">
+        <Heatmap src="data/r112/G.json" label="G: L の Gram 行列（56×56）" caption="対称、対角はすべて偶数。" />
+        <Heatmap src="data/r112/tau.json" label="τ（56×56）" caption="見た目は乱雑。" />
+        <Heatmap src="data/r112/tau2.json" label="τ²" caption="対角に −5 が並ぶだけ。" />
+        <Heatmap src="data/r112/g1.json" label="g₁: SL₂(29) の生成元（位数 5）" />
+        <Heatmap src="data/r112/Rblock.json" label="R の Gram 行列（ブロックのまま、112×112）" blocks={56} caption="左上 3G、右上 τG、右下 2G。" />
+        <Heatmap src="data/r112/R.json" label="R の Gram 行列（公開した LLL 簡約版）" caption="同じ格子の別の基底。構造は見えない。" />
+      </div>
+      <div class="panel grid max-w-prose gap-2">
+        <h3 class="text-[1.1875rem] font-semibold">データから直接読める事実</h3>
+        <p class="note">このページの生成時に、上の行列から整数（BigInt）で計算した結果。行列式は Bareiss の分数なし消去 [Bar68]、途中の主小行列式がすべて正なので正定値（Sylvester の判定法）。同じ検査のコード: <a href={pub('verify/01_basic.py')}>verify/01_basic.py</a></p>
+        <ul class="grid gap-1 text-[.9375rem]">
+          {basic.map((c) => <li class="flex gap-2"><span class={c.ok ? 'text-ok' : 'text-red-600'}>{c.ok ? '✓' : '✗'}</span><span set:html={tex(c.what)} /></li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="grid gap-5" id="group">
+      <div class="prose-lat"><Group /></div>
+      <div class="max-w-prose overflow-x-auto rounded-md border border-rule bg-sheet">
+        <table class="tbl">
+          <thead><tr><th class="num">位数</th><th class="num">類の数</th><th class="num">元の数</th><th class="num" set:html={T[1]} /></tr></thead>
+          <tbody>
+            {classes.rows.map(([o, c, n, t]) => <tr><td class="num">{o}</td><td class="num">{c}</td><td class="num">{fmt(n)}</td><td class="num" set:html={tex(`$${t}$`)} /></tr>)}
+            <tr><td>計</td><td class="num">33</td><td class="num">24,360</td><td /></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note max-w-prose">GAP 4 で計算（群を最小ベクトル 8,120 本への置換作用として作り、<code>IsomorphismGroups</code> で SL(2,29) との同型も確認）。スクリプト <Fragment set:html={work('site/r112/sl2-29-classes.g')} /> <span class="chip-priv">作業用リポジトリ</span></p>
+    </section>
+
+    <section class="grid gap-5" id="theta">
+      <div class="prose-lat"><Theta /></div>
+      <div class="grid max-w-prose gap-4 sm:grid-cols-2">
+        {[[56, th56], [112, th112]].map(([n, th]: any) => (
+          <div class="overflow-x-auto rounded-md border border-rule bg-sheet">
+            <table class="tbl">
+              <thead><tr><th colspan="2">{n} 次元（最小 {th.min}）</th></tr><tr><th class="num">ノルム</th><th class="num">本数</th></tr></thead>
+              <tbody>{th.coefficients.map((c: bigint, e: number) => <tr class={2 * e === th.min ? 'bg-accent-soft' : ''}><td class="num">{2 * e}</td><td class="num">{e === 0 ? '1' : fmt(c)}</td></tr>)}</tbody>
+            </table>
+          </div>
+        ))}
+      </div>
+      <p class="note max-w-prose">同じ計算: <a href={pub('verify/theta_series.py')}>verify/theta_series.py</a> <span class="chip-exact">✓ 有理数で厳密</span></p>
+    </section>
+
+    <section class="grid gap-5" id="reduce">
+      <div class="prose-lat"><Reduce /></div>
+      <div class="panel grid gap-4 sm:grid-cols-[minmax(0,30rem)_minmax(0,1fr)] sm:items-start">
+        <TypeGrid />
+        <p class="note" set:html={T[2]} />
+      </div>
+      <div class="prose-lat"><Certificate /></div>
+      <p class="note max-w-prose">証明書の作成 <Fragment set:html={work('experiments/2026-10-13-112-exact-610.py')} />、検算 <Fragment set:html={work('experiments/2026-10-13-112-init-verify-610-certificate.py')} /> <span class="chip-priv">作業用リポジトリ</span></p>
+    </section>
+
+    <section class="grid gap-5" id="orbits">
+      <div class="prose-lat"><Orbits /></div>
+      <div class="panel grid gap-3">
+        <h3 class="text-[1.1875rem] font-semibold">「本数 ÷ 群の位数」と実際の軌道の数</h3>
+        <OrbitChart rows={orbitRows(S112)} />
+        <p class="note" set:html={T[3]} />
+      </div>
+    </section>
+
+    <section class="grid gap-5" id="budget">
+      <div class="prose-lat"><Budget /></div>
+      <div class="panel grid gap-3">
+        <h3 class="text-[1.1875rem] font-semibold" set:html={T[4]} />
+        <SiegelChart refs={[{ value: 24360, label: '|SL₂(29)| = 24,360' }]} highlight={112} knownUpTo={88} />
+        <p class="note">生成時に有理数から計算。同じ計算: <a href={pub('verify/siegel_mean.py')}>verify/siegel_mean.py</a></p>
+      </div>
+      <div class="max-w-wide overflow-x-auto rounded-md border border-rule bg-sheet">
+        <table class="tbl">
+          <thead><tr><th>格子</th><th class="num" set:html={T[5]} /><th class="num" set:html={T[6]} /><th class="num" set:html={T[7]} /><th class="num" set:html={T[8]} /><th class="num" set:html={tex(String.raw`$e^{-\lambda}$`)} /><th>実際</th></tr></thead>
+          <tbody>{budget.map((r) => <tr><td set:html={tex(r.name)} /><td class="num">{r.n}</td><td class="num" set:html={tex(sci(r.S))} /><td class="num" set:html={tex(r.wText)} /><td class="num" set:html={tex(sci(r.lambda))} /><td class="num" set:html={tex(expm(r.lambda))} /><td set:html={tex(r.real.replace('[Neb12]', '<a href="#ref-Neb12">[Neb12]</a>'))} /></tr>)}</tbody>
+        </table>
+      </div>
+      <p class="note max-w-prose" set:html={T[9]} />
+    </section>
+
+    <section class="grid gap-4" id="heavy">
+      <h2 class="text-[2.125rem] font-extrabold">重い計算の一覧</h2>
+      <p class="max-w-prose">ステップ 2・5〜9 の計算の要約。時間は作業用マシン（WSL2, 8 コア, 15 GB）での実測。コードと記録は作業用リポジトリにあり、<a href="https://github.com/roiban1344/lattice">lattice リポジトリ</a>へ移す予定 <span class="chip-priv">移行前</span></p>
+      <div class="overflow-x-auto rounded-md border border-rule bg-sheet">
+        <table class="tbl">
+          <thead><tr><th>何を</th><th class="num">ステップ</th><th>方法</th><th>時間</th><th>結果</th><th>コードと記録</th></tr></thead>
+          <tbody>{heavy.map((h) => <tr>
+            <td><strong set:html={tex(h.what)} /><br /><Fragment set:html={chip[h.kind]} /></td>
+            <td class="num">{h.step}</td><td set:html={tex(h.how)} /><td set:html={tex(h.time)} /><td>{h.result}</td>
+            <td set:html={h.code.length ? h.code.map(work).join('<br>') : h.kind === 'todo' ? '—' : '<span class="note">報告者の手元（共有の申し出あり）</span>'} />
+          </tr>)}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid gap-4" id="checks">
+      <h2 class="text-[2.125rem] font-extrabold">誰が何を確かめたか</h2>
+      <p class="max-w-prose" set:html={T[10]} />
+      <div class="overflow-x-auto rounded-md border border-rule bg-sheet">
+        <table class="tbl">
+          <thead><tr><th>ステップ</th>{checks.cols.map((c) => <th>{c}</th>)}</tr></thead>
+          <tbody>{checks.rows.map((r) => <tr><td><strong set:html={tex(r[0])} /></td>{r.slice(1).map((c) => <td>{c}</td>)}</tr>)}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid gap-4" id="weak">
+      <div class="prose-lat"><Weak /></div>
+    </section>
+
+    <section class="grid gap-3" id="refs">
+      <h2 class="text-[2.125rem] font-extrabold">文献</h2>
+      <ul class="grid max-w-prose gap-2 text-[.875rem] leading-relaxed">
+        {Object.entries(refs).map(([k, r]) => <li id={`ref-${k}`}>[{k}] {r.text} <a href={r.url}>{r.link}</a></li>)}
+      </ul>
+    </section>
+  </article>
+</Base>
