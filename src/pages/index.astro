@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 // 格子ごとの頁。status: done = 公開、wip = 準備中
 const lattices = [
-  { dim: 72, name: 'Γ₇₂', who: 'Nebe 2010', status: 'wip', what: '既知の極値格子。同じ検査の道具が「本物」を本物と判定することの確認用', href: '' },
+  { dim: 72, name: 'Γ₇₂', who: 'Nebe 2010', status: 'done', what: '既知の極値格子。112 次元と同じ道具が本物を本物と判定するかの検定', href: `${base}g72/` },
   { dim: 88, name: '坂本の 2 格子', who: 'Sakamoto 2026', status: 'wip', what: '既知の最高次元', href: '' },
   { dim: 112, name: 'R₁₁₂', who: '候補（2026-10）', status: 'done', what: '56 + 56 の貼り合わせ。最小ノルム 10 の主張', href: `${base}r112/` },
 ];

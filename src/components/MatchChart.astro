@@ -1,0 +1,29 @@
+---
+// 構造ごとに「48 × 一直線の 3 点組」（塗り）と [Neb12] Table 1 の本数（白抜き）を対数目盛で並べる。0 は左端。
+interface Row { name: string; ours: number; lit: number }
+interface Props { rows: Row[]; random?: number }
+const { rows, random } = Astro.props;
+const W = 720, rowH = 40, T = 34, L = 200, R = 24, H = T + rows.length * rowH + 30, e0 = 4, e1 = 7;
+const X = (v: number) => (v <= 0 ? L : L + ((Math.log10(v) - e0) / (e1 - e0)) * (W - L - R));
+const sup = (e: number) => String(e).replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d]);
+const fmt = (v: number) => v.toLocaleString('en-US');
+---
+<div class="overflow-x-auto">
+<svg viewBox={`0 0 ${W} ${H}`} class="block h-auto w-full min-w-[34rem] font-mono" role="img" aria-label="ノルム 6 の本数: このページの計算と文献">
+  {[4, 5, 6, 7].map((e) => <g><line x1={X(10 ** e)} x2={X(10 ** e)} y1={T - 8} y2={H - 26} stroke="rgb(var(--rule))" /><text x={X(10 ** e)} y={H - 10} text-anchor="middle" font-size="11" fill="rgb(var(--muted))">10{sup(e)}</text></g>)}
+  {random && <g><line x1={X(random)} x2={X(random)} y1={T - 8} y2={H - 26} stroke="rgb(var(--ink))" stroke-dasharray="5 4" /><text x={X(random) + 4} y={H - 30} font-size="10" fill="rgb(var(--ink))">でたらめな 24 点なら</text></g>}
+  <g font-size="11" fill="rgb(var(--muted))">
+    <circle cx={L} cy="12" r="5" fill="rgb(var(--accent))" /><text x={L + 10} y="16">48 × 一直線の 3 点組（ここでの計算）</text>
+    <circle cx={L + 290} cy="12" r="8" fill="none" stroke="rgb(var(--muted))" stroke-width="2" /><text x={L + 302} y="16">[Neb12] Table 1</text>
+  </g>
+  {rows.map((r, k) => {
+    const y = T + k * rowH + rowH / 2;
+    return <g>
+      <text x={L - 12} y={y + 4} text-anchor="end" font-size="11" fill="rgb(var(--ink))">{r.name}</text>
+      <circle cx={X(r.ours)} cy={y} r="5" fill="rgb(var(--accent))"><title>{`ここでの計算 ${fmt(r.ours)}`}</title></circle>
+      <circle cx={X(r.lit)} cy={y} r="8" fill="none" stroke="rgb(var(--muted))" stroke-width="2"><title>{`Table 1: ${fmt(r.lit)}`}</title></circle>
+      <text x={Math.max(X(r.ours), X(r.lit)) + 14} y={y + 4} font-size="10" fill="rgb(var(--muted))">{r.ours === 0 ? '0（極値）' : fmt(r.ours)}</text>
+    </g>;
+  })}
+</svg>
+</div>
