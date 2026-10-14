@@ -10,7 +10,7 @@ function info(a: number, b: number): [string, string] {
 }
 const sym: Record<string, string> = { zero: '0', minL: '<6', parity: '奇', live: '残る' };
 ---
-<svg viewBox={`0 0 ${W} ${H}`} class="block h-auto w-full max-w-[30rem] font-mono" role="img" aria-label="(a, b) 型の表">
+<svg viewBox={`0 0 ${W} ${H}`} class="fig block h-auto w-full max-w-[30rem]" role="img" aria-label="(a, b) 型の表">
   <text x={pad + (vals.length * s) / 2} y="12" text-anchor="middle" font-size="11" fill="rgb(var(--muted))">b = (v, v)</text>
   <text x="10" y={pad + (vals.length * s) / 2} text-anchor="middle" font-size="11" fill="rgb(var(--muted))" transform={`rotate(-90 10 ${pad + (vals.length * s) / 2})`}>a = (x, x)</text>
   {vals.map((v, k) => <g><text x={pad + k * s + s / 2} y={pad - 8} text-anchor="middle" font-size="11" fill="rgb(var(--muted))">{v}</text><text x={pad - 8} y={pad + k * s + s / 2 + 4} text-anchor="end" font-size="11" fill="rgb(var(--muted))">{v}</text></g>)}

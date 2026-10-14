@@ -1,8 +1,10 @@
 ---
-import Base from '../../layouts/Base.astro';
+import Page from '../../layouts/Page.astro';
+import Sec from '../../components/Sec.astro';
 import Heatmap from '../../components/Heatmap.astro';
 import FrameView from '../../components/FrameView.astro';
 import MatchChart from '../../components/MatchChart.astro';
+import Refs from '../../components/Refs.astro';
 import { Content as Claim } from '../../sections/g72/claim.md';
 import { Content as Matrices } from '../../sections/g72/matrices.md';
 import { Content as Reduce } from '../../sections/g72/reduce.md';
@@ -13,110 +15,109 @@ import { Content as Weak } from '../../sections/g72/weak.md';
 import { basicChecks, caps, repo } from '../../lib/g72';
 import { extremalTheta } from '../../lib/lattice';
 import { tex } from '../../lib/tex';
-import { refs } from '../../data/refs';
+import { n$ } from '../../lib/num';
+import { groupTex } from '../../data/g72';
 
+const sections = [
+  { id: 'claim', title: '何を確かめるか' },
+  { id: 'matrices', title: '行列を眺める' },
+  { id: 'reduce', title: String.raw`$72$ 次元の問題を $24$ 次元に落とす` },
+  { id: 'frames', title: '枠を $1$ つ見る' },
+  { id: 'count', title: '$9$ つの構造で数える' },
+  { id: 'random', title: 'でたらめならどうか' },
+  { id: 'compare', title: String.raw`$112$ 次元の候補との対応` },
+  { id: 'weak', title: '確かめたこと、確かめていないこと' },
+  { id: 'refs', title: '文献' },
+];
+const S = Object.fromEntries(sections.map((s) => [s.id, s]));
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const fmt = (v: number | bigint) => v.toLocaleString('en-US');
 const basic = basicChecks();
 const C = caps();
 const th72 = extremalTheta(72, 7);
-const S = C.structures as any[];
-const good = S[0];
-const worst = S.reduce((a: any, b: any) => (b.lines > a.lines ? b : a));
-const mid = S.find((s: any) => s.table1[0]?.no === 3);
-const name = (s: any) => s.table1.map((t: any) => t.group).filter((g: string, i: number, a: string[]) => a.indexOf(g) === i).join(' / ');
-const rows = S.map((s: any) => ({ name: `${s.table1.map((t: any) => t.no).join(', ')}. ${name(s)}`, ours: s.norm6, lit: s.table1[0]?.norm6 ?? NaN }));
+const St = C.structures as any[];
+const nos = (s: any) => s.table1.map((t: any) => t.no) as number[];
+const name = (s: any) => `$${groupTex[nos(s)[0]]}$`;
+const label = (s: any) => `${nos(s).join(', ')}. ${name(s)}`;
+const good = St[0];
+const worst = St.reduce((a: any, b: any) => (b.lines > a.lines ? b : a));
+const mid = St.find((s: any) => nos(s)[0] === 3);
+const rows = St.map((s: any) => ({ name: label(s), ours: s.norm6, lit: s.table1[0]?.norm6 ?? NaN }));
 const randomNorm6 = Math.round((48 * 4095 * 2024) / 2045);
-const T = [
-  tex(String.raw`対称性で割る物差し $\lambda$ については <a href="${base}r112/#budget">112 次元の頁</a>。`),
-];
+const t = {
+  lead: tex(String.raw`Nebe が 2010 年に構成した $72$ 次元の極値偶ユニモジュラー格子 $\Gamma_{72}$ を、$112$ 次元の候補と同じ考え方で調べ直している。既に定理として確かな格子に同じ道具を当て、道具が本物を本物と判定できるかを確かめるのが目的。`),
+  kv: [[String.raw`$72$`, '次元'], [String.raw`$\min=8$`, '極値（定理）'], [n$(th72.coefficients[4]), '最小ベクトルの本数'], [String.raw`$4095$`, '調べる枠の数']].map(([v, l]) => [tex(v), l]),
+  frameNote: tex(String.raw`$24$ 行が枠の $24$ 点、$12$ 列が住所の桁で、黒が $1$。外れの構造では一直線の $3$ 点（赤）の住所を桁ごとに足すと全部 $0$ になり、和の行が空になる。当たりの構造ではどの枠にもそういう $3$ 行がない。`),
+  countHead: ['Table 1 の番号と群', '枠', String.raw`一直線の $3$ 点組`, String.raw`$\times 48$`, 'Table 1', '一次式のない枠'].map(tex),
+  countNote: tex(String.raw`計算は <a href="${repo('verify/g72/caps.py')}">verify/g72/caps.py</a>（SageMath、約 $40$ 秒）、結果は <a href="${repo('data/g72/caps.json')}">data/g72/caps.json</a>。<span class="chip-exact">✓ 整数で厳密</span> Leech 格子の最小ベクトルの列挙だけは PARI の qfminim に任せ、本数 $196\,560$ の一致で確かめた。`),
+  lambdaNote: tex(String.raw`対称性で割る物差し $\lambda$ の説明は <a href="${base}r112/#budget">$112$ 次元の頁</a>にある。`),
+};
 ---
-<Base title="Γ₇₂ — 72 次元の極値格子" description="Nebe の Γ₇₂ を、112 次元の候補と同じ「衝突」の道具で調べ直す。当たりは衝突 0、外れの 8 構造は文献と本数まで一致。">
-  <article class="grid gap-14">
-    <header class="grid max-w-[52rem] gap-5">
-      <p class="note tracking-[.12em]">極値偶ユニモジュラー格子 · 72 次元 · 道具の検定</p>
-      <h1 class="text-[2.875rem] font-extrabold leading-tight">Γ<sub class="text-[.55em]">72</sub></h1>
-      <p class="text-[1.1875rem] leading-[1.9]">Nebe が 2010 年に構成した 72 次元の極値偶ユニモジュラー格子。112 次元の候補と同じ考え方で調べ直し、道具が本物を本物と判定できるかの検定。</p>
-      <p class="flex flex-wrap gap-2"><span class="chip-exact">✓ 既知の定理 [Neb12]</span><span class="chip-hand">ここでの計算は再確認</span></p>
-      <dl class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {[['72', '次元'], ['min = 8', '極値（定理）'], [fmt(th72.coefficients[4]), '最小ベクトルの本数'], ['4095', '調べる枠の数']].map(([v, l]) => (
-          <div class="grid gap-0.5 border-t-2 border-ink pt-2"><dt class="font-mono text-[1.1875rem]">{v}</dt><dd class="note">{l}</dd></div>
-        ))}
-      </dl>
-      <p class="note">コードとデータ: <a href={repo('verify/g72/caps.py')}>verify/g72/caps.py</a>、<a href={repo('data/g72/SOURCE.md')}>data/g72/</a>。前提の用語は <a href={`${base}primer/`}>前提</a> の頁。</p>
-    </header>
+<Page title="Γ₇₂ — 72 次元の極値格子" description="Nebe の Γ₇₂ を 112 次元の候補と同じ衝突の道具で調べ直し、当たりは衝突 0、外れの 8 構造は文献と本数まで一致することを確かめる。" sections={sections}>
+  <header class="grid max-w-[52rem] gap-5">
+    <p class="note tracking-[.12em]">極値偶ユニモジュラー格子 · 72 次元 · 道具の検定</p>
+    <h1 class="text-[2.875rem] font-extrabold leading-tight" set:html={tex(String.raw`$\Gamma_{72}$`)} />
+    <p class="text-[1.1875rem] leading-[1.9]" set:html={t.lead} />
+    <p class="flex flex-wrap gap-2"><span class="chip-exact">✓ 既知の定理 [Neb12]</span><span class="chip-hand">ここでの計算はその再確認</span></p>
+    <dl class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {t.kv.map(([v, l]) => <div class="grid gap-0.5 border-t-2 border-ink pt-2"><dt class="text-[1.25rem]" set:html={v} /><dd class="note">{l}</dd></div>)}
+    </dl>
+    <p class="note">コードは <a href={repo('verify/g72/caps.py')}>verify/g72/caps.py</a>、データは <a href={repo('data/g72/SOURCE.md')}>data/g72/</a>。用語は <a href={`${base}primer/`}>前提</a> の頁にまとめた。</p>
+  </header>
 
-    <section class="grid gap-4" id="claim">
-      <h2 class="text-[2.125rem] font-extrabold">何を確かめるか</h2>
-      <div class="prose-lat"><Claim /></div>
-    </section>
+  <Sec s={S.claim}><div class="prose-lat"><Claim /></div></Sec>
 
-    <section class="grid gap-5" id="matrices">
-      <div class="prose-lat"><Matrices /></div>
-      <div class="grid gap-6 sm:grid-cols-3">
-        <Heatmap src="data/g72/F.json" label="F: Leech 格子の Gram 行列（24×24）" />
-        <Heatmap src="data/g72/A.json" label="A: α の作用（24×24）" />
-        <Heatmap src="data/g72/Gamma.json" label="Γ₇₂ の Gram 行列（72×72）" blocks={24} />
-      </div>
-      <div class="panel grid max-w-prose gap-2">
-        <h3 class="text-[1.1875rem] font-semibold">データから直接読める事実</h3>
-        <p class="note">このページの生成時に整数（BigInt）で計算。</p>
-        <ul class="grid gap-1 text-[.9375rem]">
-          {basic.map((c) => <li class="flex gap-2"><span class={c.ok ? 'text-ok' : 'text-red-600'}>{c.ok ? '✓' : '✗'}</span><span set:html={tex(c.what)} /></li>)}
-          <li class="flex gap-2"><span class={C.same_lattice_as_nebe_generators ? 'text-ok' : 'text-red-600'}>✓</span><span set:html={tex(String.raw`生成行列 $T$ の格子と $\{u_i-u_j\in\beta\Lambda,\ \sum u_i\in\alpha\Lambda\}$ が一致（Hermite 標準形の比較、caps.py）`)} /></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="grid gap-5" id="reduce">
-      <div class="prose-lat"><Reduce /></div>
-      <div class="panel grid gap-4">
-        <h3 class="text-[1.1875rem] font-semibold">枠を 1 つ見る</h3>
-        <p class="note max-w-prose">24 行が枠の 24 点、12 列が住所の桁（黒が 1）。外れの構造では一直線の 3 点（赤）の住所を桁ごとに足すと全部 0 になり、和の行が空になる。当たりの構造ではどの枠にもそういう 3 行がない。</p>
-        <div class="grid gap-6 sm:grid-cols-3">
-          <FrameView points={good.example_frame.points} lines={good.example_frame.lines} title="SL₂(25)（当たり）" note={`一直線の 3 点組 0。24 点の階数 ${good.example_frame.rank}`} />
-          <FrameView points={mid.example_frame.points} lines={mid.example_frame.lines} title={name(mid)} note={`この枠の一直線の 3 点組 ${mid.example_frame.lines.length}`} />
-          <FrameView points={worst.example_frame.points} lines={worst.example_frame.lines} title={name(worst)} note={`この枠の一直線の 3 点組 ${worst.example_frame.lines.length}`} />
-        </div>
-      </div>
-    </section>
-
-    <section class="grid gap-5" id="count">
-      <div class="prose-lat"><Count /></div>
-      <div class="panel grid gap-3">
-        <h3 class="text-[1.1875rem] font-semibold">ノルム 6 の本数: ここでの計算と [Neb12] Table 1</h3>
-        <MatchChart rows={rows} random={randomNorm6} />
-      </div>
-      <div class="overflow-x-auto rounded-md border border-rule bg-sheet">
-        <table class="tbl">
-          <thead><tr><th>Table 1 の番号と群</th><th class="num">枠</th><th class="num">一直線の 3 点組</th><th class="num">× 48</th><th class="num">Table 1</th><th class="num">一次式のない枠</th></tr></thead>
-          <tbody>{S.map((s: any, k: number) => <tr class={k === 0 ? 'bg-accent-soft' : ''}>
-            <td>{rows[k].name}</td><td class="num">{fmt(s.frames)}</td><td class="num">{fmt(s.lines)}</td><td class="num">{fmt(s.norm6)}</td><td class="num">{fmt(s.table1[0]?.norm6)}</td>
-            <td class="num">{fmt(s.by_type.filter((t: any) => !t.odd).reduce((a: number, t: any) => a + t.frames, 0))}</td>
-          </tr>)}</tbody>
-        </table>
-      </div>
-      <p class="note max-w-prose">計算: <a href={repo('verify/g72/caps.py')}>verify/g72/caps.py</a>（SageMath、約 40 秒）。結果: <a href={repo('data/g72/caps.json')}>data/g72/caps.json</a> <span class="chip-exact">✓ 整数で厳密</span>（Leech 格子の最小ベクトルの列挙だけは PARI の qfminim。本数 196,560 の一致で確認）</p>
-    </section>
-
-    <section class="grid gap-4" id="random">
-      <div class="prose-lat"><Random /></div>
-      <p class="note max-w-prose" set:html={T[0]} />
-    </section>
-
-    <section class="grid gap-4" id="compare">
-      <div class="prose-lat"><Compare /></div>
-    </section>
-
-    <section class="grid gap-4" id="weak">
-      <div class="prose-lat"><Weak /></div>
-    </section>
-
-    <section class="grid gap-3" id="refs">
-      <h2 class="text-[2.125rem] font-extrabold">文献</h2>
-      <ul class="grid max-w-prose gap-2 text-[.875rem] leading-relaxed">
-        {['Neb12', 'CN13', 'EXT72', 'NS', 'SPLAG'].map((k) => <li id={`ref-${k}`}>[{k}] {refs[k].text} <a href={refs[k].url}>{refs[k].link}</a></li>)}
+  <Sec s={S.matrices}>
+    <div class="prose-lat"><Matrices /></div>
+    <div class="grid gap-6 sm:grid-cols-3">
+      <Heatmap src="data/g72/F.json" label="F: Leech 格子の Gram 行列（24×24）" />
+      <Heatmap src="data/g72/A.json" label="A: α の作用（24×24）" />
+      <Heatmap src="data/g72/Gamma.json" label="Γ₇₂ の Gram 行列（72×72）" blocks={24} />
+    </div>
+    <div class="panel grid max-w-prose gap-2">
+      <h3 class="text-[1.1875rem] font-semibold">データから直接読める事実</h3>
+      <p class="note">この頁の生成時に整数（BigInt）で計算した。</p>
+      <ul class="grid gap-1 text-[.9375rem]">
+        {basic.map((c) => <li class="flex gap-2"><span class={c.ok ? 'text-ok' : 'text-red-600'}>{c.ok ? '✓' : '✗'}</span><span set:html={tex(c.what)} /></li>)}
+        <li class="flex gap-2"><span class={C.same_lattice_as_nebe_generators ? 'text-ok' : 'text-red-600'}>✓</span><span set:html={tex(String.raw`生成行列 $T$ の格子と $\{u_i-u_j\in\beta\Lambda,\ \sum u_i\in\alpha\Lambda\}$ が一致する（Hermite 標準形の比較、caps.py）`)} /></li>
       </ul>
-    </section>
-  </article>
-</Base>
+    </div>
+  </Sec>
+
+  <Sec s={S.reduce}><div class="prose-lat"><Reduce /></div></Sec>
+
+  <Sec s={S.frames}>
+    <p class="max-w-prose" set:html={t.frameNote} />
+    <div class="panel grid gap-6 sm:grid-cols-3">
+      <FrameView points={good.example_frame.points} lines={good.example_frame.lines} title={`${name(good)}（当たり）`} note={`一直線の $3$ 点組 $0$。$24$ 点の階数 $${good.example_frame.rank}$`} />
+      <FrameView points={mid.example_frame.points} lines={mid.example_frame.lines} title={name(mid)} note={`この枠の一直線の $3$ 点組 $${mid.example_frame.lines.length}$`} />
+      <FrameView points={worst.example_frame.points} lines={worst.example_frame.lines} title={name(worst)} note={`この枠の一直線の $3$ 点組 $${worst.example_frame.lines.length}$`} />
+    </div>
+  </Sec>
+
+  <Sec s={S.count}>
+    <div class="prose-lat"><Count /></div>
+    <div class="panel grid gap-3">
+      <h3 class="text-[1.1875rem] font-semibold" set:html={tex(String.raw`ノルム $6$ の本数: ここでの計算と [Neb12] Table 1`)} />
+      <MatchChart rows={rows} random={randomNorm6} />
+    </div>
+    <div class="overflow-x-auto rounded-md border border-rule bg-sheet">
+      <table class="tbl">
+        <thead><tr>{t.countHead.map((h, i) => <th class={i ? 'num' : ''} set:html={h} />)}</tr></thead>
+        <tbody>{St.map((s: any, k: number) => <tr class={k === 0 ? 'bg-accent-soft' : ''}>
+          <td set:html={tex(rows[k].name)} /><td class="num" set:html={tex(n$(s.frames))} /><td class="num" set:html={tex(n$(s.lines))} /><td class="num" set:html={tex(n$(s.norm6))} /><td class="num" set:html={tex(n$(s.table1[0]?.norm6))} />
+          <td class="num" set:html={tex(n$(s.by_type.filter((x: any) => !x.odd).reduce((a: number, x: any) => a + x.frames, 0)))} />
+        </tr>)}</tbody>
+      </table>
+    </div>
+    <p class="note max-w-prose" set:html={t.countNote} />
+  </Sec>
+
+  <Sec s={S.random}>
+    <div class="prose-lat"><Random /></div>
+    <p class="note max-w-prose" set:html={t.lambdaNote} />
+  </Sec>
+
+  <Sec s={S.compare}><div class="prose-lat"><Compare /></div></Sec>
+  <Sec s={S.weak}><div class="prose-lat"><Weak /></div></Sec>
+  <Sec s={S.refs}><Refs keys={['Neb12', 'CN13', 'EXT72', 'NS', 'SPLAG']} /></Sec>
+</Page>

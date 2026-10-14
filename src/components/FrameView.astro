@@ -1,5 +1,6 @@
 ---
 // 枠の 24 点を、12 桁の 0/1 の住所として 24 行 × 12 列で描く。一直線の 3 点（住所の和が 0）があれば、その 3 行と和の行を色付きで示す。
+import { tex } from '../lib/tex';
 interface Props { points: number[]; lines: number[][]; title: string; note: string }
 const { points, lines, title, note } = Astro.props;
 const triple = lines[0] ?? [];
@@ -8,8 +9,8 @@ const cell = 16, W = 12 * cell + 64, rows = points.length + (triple.length ? 2 :
 const sumRow = triple.length ? bits(triple[0] ^ triple[1] ^ triple[2]) : [];
 ---
 <figure class="grid gap-2">
-  <figcaption class="note"><strong class="text-ink">{title}</strong> {note}</figcaption>
-  <svg viewBox={`0 0 ${W} ${H}`} class="block h-auto w-full max-w-[17rem] font-mono" role="img" aria-label={`${title}: 24 点の住所`}>
+  <figcaption class="note"><strong class="text-ink" set:html={tex(title)} /> <span set:html={tex(note)} /></figcaption>
+  <svg viewBox={`0 0 ${W} ${H}`} class="fig block h-auto w-full max-w-[17rem]" role="img" aria-label={`${title}: 24 点の住所`}>
     {Array.from({ length: 12 }, (_, t) => <text x={56 + t * cell + cell / 2} y="12" text-anchor="middle" font-size="9" fill="rgb(var(--muted))">{12 - t}</text>)}
     {points.map((p, i) => {
       const hl = triple.includes(p), y = 18 + i * cell;

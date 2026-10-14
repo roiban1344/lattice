@@ -5,6 +5,7 @@ export const refs: Record<string, { text: string; url: string; link: string }> =
   Neb12: { text: 'G. Nebe, An even unimodular 72-dimensional lattice of minimum 8, J. reine angew. Math. 673 (2012) 237–247.', url: 'https://arxiv.org/abs/1008.2862', link: 'arXiv:1008.2862' },
   CN13: { text: 'R. Coulangeon, G. Nebe, Dense lattices as Hermitian tensor products, Contemp. Math. 587 (2013).', url: 'https://arxiv.org/abs/1201.1832', link: 'arXiv:1201.1832' },
   Sak26: { text: 'R. Sakamoto, Two extremal even unimodular lattices of rank 88, preprint (2026).', url: 'https://arxiv.org/abs/2609.15633', link: 'arXiv:2609.15633' },
+  Sak26code: { text: 'R. Sakamoto, rank-88-extremal-lattice-computations（コード、データ、証明書）, commit 628ce2a.', url: 'https://github.com/RyotaroSakamoto0113/rank-88-extremal-lattice-computations/tree/628ce2a7ac23acf8d4c295677e4310c9ec5b21d9', link: 'GitHub' },
   EXT72: { text: 'G. Nebe, Magma code for the construction of the extremal 72-dimensional lattice (ConstExtremal72).', url: 'https://www.math.rwth-aachen.de/~Gabriele.Nebe/EXT72/ConstExtremal72', link: 'web' },
   NS: { text: 'G. Nebe, N. J. A. Sloane, A Catalogue of Lattices.', url: 'https://www.math.rwth-aachen.de/~Gabriele.Nebe/LATTICES/', link: 'web' },
   SPLAG: { text: 'J. H. Conway, N. J. A. Sloane, Sphere Packings, Lattices and Groups, 3rd ed., Springer 1999.', url: 'https://doi.org/10.1007/978-1-4757-6568-7', link: 'doi' },

@@ -1,0 +1,13 @@
+---
+// 1 格子 1 頁の枠: 左に目次、右に本文。節は sections で一元管理し、見出しと目次を同じ配列から作る。
+import Base from './Base.astro';
+import Toc from '../components/Toc.astro';
+interface Props { title: string; description?: string; sections: { id: string; title: string }[] }
+const { title, description, sections } = Astro.props;
+---
+<Base title={title} description={description}>
+  <div class="grid gap-8 lg:grid-cols-[11rem_minmax(0,1fr)] lg:gap-12">
+    <Toc items={sections} />
+    <article class="grid gap-14"><slot /></article>
+  </div>
+</Base>

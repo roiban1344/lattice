@@ -4,7 +4,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
+    "fetch-external": "node scripts/fetch-external.mjs",
+    "dev": "node scripts/fetch-external.mjs && astro dev",
+    "prebuild": "node scripts/fetch-external.mjs",
     "build": "astro build",
     "preview": "astro preview"
   },

@@ -1,0 +1,10 @@
+---
+// 節。見出しは sections 配列の title（TeX 可）。本文は slot。
+import { tex } from '../lib/tex';
+interface Props { s: { id: string; title: string } }
+const { s } = Astro.props;
+---
+<section id={s.id} class="grid scroll-mt-6 gap-5">
+  <h2 class="text-[2.125rem] font-extrabold leading-tight" set:html={tex(s.title)} />
+  <slot />
+</section>

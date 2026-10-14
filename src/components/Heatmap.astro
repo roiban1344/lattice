@@ -8,9 +8,9 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   <figcaption class="note">{label}</figcaption>
   <div class="relative">
     <canvas class="block h-auto w-full border border-rule bg-[rgb(var(--heat-mid))] [image-rendering:pixelated] [touch-action:none]" role="img" aria-label={`${label} のヒートマップ`}></canvas>
-    <div class="tip pointer-events-none absolute whitespace-nowrap rounded bg-ink px-2 py-0.5 font-mono text-[.8125rem] text-paper" hidden style="transform:translate(-50%,calc(-100% - 10px))"></div>
+    <div class="tip num-font pointer-events-none absolute whitespace-nowrap rounded bg-ink px-2 py-0.5 text-[.875rem] text-paper" hidden style="transform:translate(-50%,calc(-100% - 10px))"></div>
   </div>
-  <div class="legend flex flex-wrap items-center gap-2 font-mono text-[.8125rem] text-muted"></div>
+  <div class="legend num-font flex flex-wrap items-center gap-2 text-[.875rem] text-muted"></div>
   {caption && <p class="note" set:html={caption} />}
 </figure>
 
@@ -41,7 +41,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       ctx.beginPath(); ctx.moveTo(blocks * k, 0); ctx.lineTo(blocks * k, N * k); ctx.moveTo(0, blocks * k); ctx.lineTo(N * k, blocks * k); ctx.stroke();
     }
     if (hl) { ctx.lineWidth = Math.max(1, k / 4); ctx.strokeRect(hl[1] * k, hl[0] * k, k, k); }
-    const fmt = (x: number) => x.toLocaleString('en-US');
+    const fmt = (x: number) => x.toLocaleString('en-US').replace(/,/g, '\u2009');
     fig.querySelector('.legend')!.innerHTML =
       `<span>−${fmt(max)}</span><span style="width:10rem;height:.6rem;border-radius:2px;background:linear-gradient(90deg,rgb(${neg}),rgb(${mid}),rgb(${pos}))"></span><span>+${fmt(max)}</span><span>（0 は灰）</span>`;
   }
@@ -54,7 +54,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         const r = canvas.getBoundingClientRect();
         const j = Math.floor(((e.clientX - r.left) / r.width) * N), i = Math.floor(((e.clientY - r.top) / r.height) * N);
         if (i < 0 || j < 0 || i >= N || j >= N) return;
-        tip.textContent = `行 ${i + 1}, 列 ${j + 1}: ${M[i][j]}`;
+        tip.textContent = `行 ${i + 1}　列 ${j + 1}　値 ${String(M[i][j]).replace('-', '−')}`;
         tip.style.left = `${e.clientX - r.left}px`; tip.style.top = `${e.clientY - r.top}px`; tip.hidden = false;
         draw(fig, M, [i, j]);
       });

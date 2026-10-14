@@ -1,15 +1,16 @@
 ---
 import 'katex/dist/katex.min.css';
 import '../styles/global.css';
+import { SITE } from '../data/site';
 
 interface Props { title: string; description?: string }
 const { title, description } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const nav = [
-  { href: base, label: '索引' },
   { href: `${base}primer/`, label: '前提' },
   { href: `${base}g72/`, label: 'Γ₇₂' },
-  { href: `${base}r112/`, label: '112 次元の候補' },
+  { href: `${base}r88/`, label: 'L₈₈' },
+  { href: `${base}r112/`, label: 'R₁₁₂' },
 ];
 ---
 <!doctype html>
@@ -25,16 +26,16 @@ const nav = [
   </head>
   <body>
     <header class="border-b border-rule">
-      <nav class="mx-auto flex max-w-wide flex-wrap items-baseline gap-x-6 gap-y-1 px-4 py-3 text-[.8125rem]" aria-label="サイト">
-        <a href={base} class="font-display text-base font-extrabold text-ink no-underline">格子ノート</a>
+      <nav class="mx-auto flex max-w-[78rem] flex-wrap items-baseline gap-x-6 gap-y-1 px-4 py-3 text-[.8125rem]" aria-label="サイト">
+        <a href={base} class="font-display text-base font-extrabold text-ink no-underline">{SITE.name}</a>
         {nav.map((n) => <a href={n.href} class="text-muted no-underline hover:text-accent">{n.label}</a>)}
         <a href="https://github.com/roiban1344/lattice" class="ml-auto text-muted no-underline hover:text-accent">GitHub</a>
       </nav>
     </header>
-    <main class="mx-auto max-w-wide px-4 pb-24 pt-10">
+    <main class="mx-auto max-w-[78rem] px-4 pb-24 pt-10">
       <slot />
     </main>
-    <footer class="mx-auto max-w-wide px-4 pb-10 note">
+    <footer class="mx-auto max-w-[78rem] px-4 pb-10 note">
       探索・コード・計算・文章の大部分は AI（Anthropic の Claude）による。方向づけと公開の責任は roiban1344。文章とデータは CC BY 4.0。
     </footer>
   </body>

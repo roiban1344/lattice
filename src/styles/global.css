@@ -70,5 +70,9 @@
   .tbl td { @apply border-b border-rule px-3 py-2 align-top; }
   .tbl tr:last-child td { @apply border-b-0; }
   .tbl .num { @apply whitespace-nowrap text-right font-mono tabular-nums; }
+  /* 図の中の文字。数は KaTeX の書体、和文はその代わりに本文の書体へ落ちる */
+  .fig text { font-family: KaTeX_Main, 'Times New Roman', 'BIZ UDPGothic', serif; }
+  .fig .fo { font-size: 12px; line-height: 1.2; color: rgb(var(--ink)); }
+  .num-font { font-family: KaTeX_Main, 'Times New Roman', serif; }
   .note { @apply text-[.8125rem] leading-relaxed text-muted; }
 }
