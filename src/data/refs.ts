@@ -21,4 +21,7 @@ export const refs: Record<string, { text: string; url?: string; link?: string }>
   Lee67: { text: 'J. Leech, Notes on sphere packings, Canad. J. Math. 19 (1967) 251–267.', url: 'https://doi.org/10.4153/CJM-1967-017-0', link: 'doi' },
   Con69: { text: "J. H. Conway, A characterisation of Leech's lattice, Invent. Math. 7 (1969) 137–142.", url: 'https://doi.org/10.1007/BF01389796', link: 'doi' },
   Kin03: { text: 'O. D. King, A mass formula for unimodular lattices with no roots, Math. Comp. 72 (2003) 839–863.', url: 'https://doi.org/10.1090/S0025-5718-02-01455-2', link: 'doi' },
+  SvdW53: { text: 'K. Schütte, B. L. van der Waerden, Das Problem der dreizehn Kugeln, Math. Ann. 125 (1953) 325–334.', url: 'https://doi.org/10.1007/BF01343127', link: 'doi' },
+  OS79: { text: 'A. M. Odlyzko, N. J. A. Sloane, New bounds on the number of unit spheres that can touch a unit sphere in n dimensions, J. Combin. Theory Ser. A 26 (1979) 210–214.', url: 'https://doi.org/10.1016/0097-3165(79)90074-8', link: 'doi' },
+  Hal05: { text: 'T. C. Hales, A proof of the Kepler conjecture, Ann. of Math. 162 (2005) 1065–1185.', url: 'https://doi.org/10.4007/annals.2005.162.1065', link: 'doi' },
 };

@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import tailwind from '@astrojs/tailwind';
+import rehypeNobreak from './src/lib/rehype-nobreak.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,6 +16,6 @@ export default defineConfig({
   integrations: [tailwind({ applyBaseStyles: false })],
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    rehypePlugins: [rehypeKatex, rehypeNobreak],
   },
 });

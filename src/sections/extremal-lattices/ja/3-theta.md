@@ -35,7 +35,7 @@ $$
 \theta_\Lambda(\tau+1)=\sum_{x\in\Lambda}e^{\pi i\tau\langle x,x\rangle}\,e^{\pi i\langle x,x\rangle}=\theta_\Lambda(\tau)
 $$
 
-が成り立ちます。次に、<ruby>Poisson<rt>ポアソン</rt></ruby> の和公式から、どの格子についても
+が成り立ちます。次に、Poisson の和公式から、どの格子についても
 
 $$
 \theta_\Lambda\!\left(-\frac1\tau\right)=\left(\frac{\tau}{i}\right)^{n/2}\frac{1}{\sqrt{\det\Lambda}}\;\theta_{\Lambda^{\#}}(\tau)
