@@ -12,12 +12,12 @@ const lead = tex(String.raw`極値偶ユニモジュラー格子の $112$ 次元
 <Base title={SITE.name} description="112 次元の極値格子の候補を、既知の極値格子と同じ物差しで測り直して公開している。">
   <article class="grid gap-12">
     <header class="grid max-w-prose gap-4">
-      <h1 class="text-[2.875rem] font-extrabold">{SITE.name}</h1>
+      <h1 class="text-[2.25rem] font-bold">{SITE.name}</h1>
       <p class="text-[1.1875rem] leading-[1.9]" set:html={lead} />
       <p>用語は <a href={`${base}primer/`}>前提</a> の頁にまとめた。格子とは何かから始めている。</p>
     </header>
     <section class="grid gap-3">
-      <h2 class="text-[1.5rem] font-extrabold">読む順</h2>
+      <h2 class="text-[1.375rem] font-bold">読む順</h2>
       <ol class="grid max-w-prose border-t border-rule">
         {lattices.map((l) => (
           <li class="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-3 border-b border-rule py-4">
@@ -31,7 +31,7 @@ const lead = tex(String.raw`極値偶ユニモジュラー格子の $112$ 次元
       </ol>
     </section>
     <section class="grid max-w-prose gap-3">
-      <h2 class="text-[1.5rem] font-extrabold">リポジトリ</h2>
+      <h2 class="text-[1.375rem] font-bold">リポジトリ</h2>
       <ul class="grid gap-2">
         <li><a href="https://github.com/roiban1344/lattice">roiban1344/lattice</a>: この頁の元。格子をまたいで使う検証のコードと、各格子のデータの写し（出どころとハッシュ付き）を集めていく。</li>
         <li set:html={tex(String.raw`<a href="https://github.com/roiban1344/112-dimensional-extremal-even-unimodular-lattice-candidate">112-dimensional-extremal-even-unimodular-lattice-candidate</a>: $112$ 次元の初報。データと軽い検算だけを置き、以後は手を入れない。`)} />

@@ -59,9 +59,6 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         draw(fig, M, [i, j]);
       });
       canvas.addEventListener('pointerleave', () => { tip.hidden = true; draw(fig, M); });
-      const redraw = () => draw(fig, M);
-      matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw);
-      new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     });
   }
 </script>

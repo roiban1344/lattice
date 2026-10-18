@@ -1,44 +1,34 @@
-/* 色の約束: すべて RGB の 3 つ組。Tailwind の bg-paper / text-ink などから使う。明・暗の 2 組。 */
+/* 色の約束: すべて RGB の 3 つ組。Tailwind の bg-paper / text-ink などから使う。ライト専用（数式と図を一つの配色で設計するため）。
+   本文 ink は白地でコントラスト比 18:1、muted は 7.5:1、accent は 7:1 を超える。 */
 :root {
-  --paper: 243 245 248;
-  --sheet: 255 255 255;
-  --ink: 20 24 32;
-  --muted: 88 96 112;
-  --rule: 214 219 228;
-  --accent: 31 71 196;
-  --accent-soft: 227 233 251;
-  --ok: 11 125 11;
-  --ok-bg: 226 243 226;
-  --warn: 138 90 0;
-  --warn-bg: 253 240 210;
+  --paper: 255 255 255;
+  --sheet: 250 250 250;
+  --ink: 17 17 17;
+  --muted: 84 84 84;
+  --rule: 217 217 217;
+  --accent: 26 79 160;
+  --accent-soft: 232 238 248;
+  --ok: 22 101 52;
+  --ok-bg: 230 242 234;
+  --warn: 133 77 14;
+  --warn-bg: 252 243 224;
   /* ヒートマップ: 正は赤、負は青、0 は灰 */
-  --heat-pos: 227 73 72;
-  --heat-neg: 42 120 214;
-  --heat-mid: 236 238 241;
+  --heat-pos: 200 52 48;
+  --heat-neg: 33 98 190;
+  --heat-mid: 238 238 238;
+  /* 本文の書体。言語ごとに切り替える（日本語は Noto Sans JP、英語は Source Serif 4） */
+  --font-body: 'Source Serif 4', 'Noto Sans JP', serif;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --paper: 16 19 24; --sheet: 23 27 34; --ink: 231 234 240; --muted: 155 163 178; --rule: 43 49 60;
-    --accent: 142 168 255; --accent-soft: 29 38 64; --ok: 111 211 111; --ok-bg: 21 48 26; --warn: 242 195 91; --warn-bg: 51 40 15;
-    --heat-pos: 230 103 103; --heat-neg: 57 135 229; --heat-mid: 42 46 53;
-    color-scheme: dark;
-  }
-}
-:root[data-theme='dark'] {
-  --paper: 16 19 24; --sheet: 23 27 34; --ink: 231 234 240; --muted: 155 163 178; --rule: 43 49 60;
-  --accent: 142 168 255; --accent-soft: 29 38 64; --ok: 111 211 111; --ok-bg: 21 48 26; --warn: 242 195 91; --warn-bg: 51 40 15;
-  --heat-pos: 230 103 103; --heat-neg: 57 135 229; --heat-mid: 42 46 53;
-  color-scheme: dark;
-}
+:root:lang(ja) { --font-body: 'Noto Sans JP', sans-serif; }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  body { @apply bg-paper text-ink font-body leading-[1.85]; }
-  h1, h2, h3 { @apply font-display; text-wrap: balance; }
+  body { @apply bg-paper text-ink font-body text-[17px] leading-[1.85]; }
+  h1, h2, h3 { @apply font-display font-bold; text-wrap: balance; }
   a { @apply text-accent underline-offset-4; }
   /* grid の子が中身の最小幅で広がり、狭い画面で横にはみ出すのを防ぐ */
   .grid > * { min-width: 0; }
@@ -54,7 +44,7 @@
     --tw-prose-quote-borders: rgb(var(--rule)); --tw-prose-th-borders: rgb(var(--rule)); --tw-prose-td-borders: rgb(var(--rule));
     line-height: 1.85;
   }
-  .prose-lat :where(h2) { @apply font-display font-extrabold text-[2.125rem] leading-tight mt-0; }
+  .prose-lat :where(h2) { @apply font-display font-bold text-[1.75rem] leading-snug mt-0; }
   .prose-lat :where(h3) { @apply font-display font-semibold; }
   .prose-lat :where(code)::before, .prose-lat :where(code)::after { content: none; }
   .prose-lat .katex-display { overflow-x: auto; overflow-y: hidden; padding-block: .25rem; }
@@ -70,8 +60,8 @@
   .tbl td { @apply border-b border-rule px-3 py-2 align-top; }
   .tbl tr:last-child td { @apply border-b-0; }
   .tbl .num { @apply whitespace-nowrap text-right font-mono tabular-nums; }
-  /* 図の中の文字。数は KaTeX の書体、和文はその代わりに本文の書体へ落ちる */
-  .fig text { font-family: KaTeX_Main, 'Times New Roman', 'BIZ UDPGothic', serif; }
+  /* 図の中の文字。数は KaTeX の書体、和文は Noto Sans JP へ落ちる */
+  .fig text { font-family: KaTeX_Main, 'Times New Roman', 'Noto Sans JP', serif; }
   .fig .fo { font-size: 12px; line-height: 1.2; color: rgb(var(--ink)); }
   .num-font { font-family: KaTeX_Main, 'Times New Roman', serif; }
   .note { @apply text-[.8125rem] leading-relaxed text-muted; }
