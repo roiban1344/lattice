@@ -4,17 +4,17 @@ import Sec from '../../components/Sec.astro';
 import Heatmap from '../../components/Heatmap.astro';
 import SiegelChart from '../../components/SiegelChart.astro';
 import Refs from '../../components/Refs.astro';
-import { Content as Claim } from '../../sections/r112/claim.md';
-import { Content as Matrices } from '../../sections/r112/matrices.md';
-import { Content as Group } from '../../sections/r112/group.md';
-import { Content as Theta } from '../../sections/r112/theta.md';
-import { Content as Budget } from '../../sections/r112/budget.md';
-import { Content as Coulangeon } from '../../sections/r112/coulangeon.md';
-import { basicChecks, pub, PUB_REPO, PUB_SHA } from '../../lib/r112';
+import { Content as Claim } from '../../sections/l112/claim.md';
+import { Content as Matrices } from '../../sections/l112/matrices.md';
+import { Content as Group } from '../../sections/l112/group.md';
+import { Content as Theta } from '../../sections/l112/theta.md';
+import { Content as Budget } from '../../sections/l112/budget.md';
+import { Content as Coulangeon } from '../../sections/l112/coulangeon.md';
+import { basicChecks, pub, PUB_REPO, PUB_SHA } from '../../lib/l112';
 import { bernoulli, extremalTheta, siegelMean } from '../../lib/lattice';
 import { tex } from '../../lib/tex';
 import { n$, sci } from '../../lib/num';
-import { classes } from '../../data/r112';
+import { classes } from '../../data/l112';
 
 const sections = [
   { id: 'claim', title: '主張' },
@@ -44,7 +44,7 @@ const work = (p: string) => `<code class="text-[.75rem]">${p}</code>`;
 const t = {
   lead: tex(String.raw`$112$ 次元の偶ユニモジュラー格子 $R$ を構成し、その最小ノルムが $10$ であることを計算で確かめている。正しければ $R$ は極値格子で、これまでの最高次元 $88$ を更新する。この頁では主張を易しい順に分解し、各段がどのデータとどのコードに支えられているかを示す。`),
   kv: [[String.raw`$112$`, '次元'], [String.raw`$\det=1$`, 'ユニモジュラー'], [String.raw`$\min=10$`, '主張（上界と一致）'], [String.raw`$88$`, 'これまでの最高次元']].map(([v, l]) => [tex(v), l]),
-  checksNote: tex(String.raw`この頁の生成時に上の行列から整数（BigInt）で計算した。行列式は Bareiss の分数なし消去 <a href="#ref-Bar68">[Bar68]</a> で求め、途中の主小行列式がすべて正なので正定値（Sylvester の判定法）。同じ検査のコードは <a href="${pub('verify/01_basic.py')}">verify/01_basic.py</a>。`),
+  checksNote: tex(String.raw`この頁の生成時に上の行列から整数（BigInt）で計算した。行列式は Bareiss の分数なし消去 <a href="#ref-Bar68">[Bar68]</a> で求め、途中の主小行列式がすべて正なので正定値（Sylvester の判定法）。同じ検査のコードは <a href="${pub('code/verify/v0_inputs.py')}">code/verify/v0_inputs.py</a>。`),
   classHead: ['位数', '類の数', '元の数', String.raw`$L$ での跡`].map(tex),
   budgetHead: ['格子', String.raw`$n$`, String.raw`$S(n)$`, String.raw`群の位数 $w$`, String.raw`$\lambda=S/w$`, String.raw`$e^{-\lambda}$`, '実際'].map(tex),
   autNote: tex(String.raw`$R$ の「既知の自己同型」は $\mathrm{SL}_2(29)$ の対角作用と、階数 $2$ のエルミート格子のユニタリ自己同型 $48$ 個が生成する群（$-1$ を共有）。自己同型群の全体は決めていない。`),
@@ -68,12 +68,12 @@ const t = {
   <Sec s={S.matrices}>
     <div class="prose-lat"><Matrices /></div>
     <div class="grid gap-6 sm:grid-cols-2">
-      <Heatmap src="data/r112/G.json" label="G: L の Gram 行列（56×56）" caption="対称で、対角はすべて偶数。" />
-      <Heatmap src="data/r112/tau.json" label="τ（56×56）" caption="見た目は乱雑。" />
-      <Heatmap src="data/r112/tau2.json" label="τ²" caption="対角に −5 が並ぶだけ。" />
-      <Heatmap src="data/r112/g1.json" label="g₁: SL₂(29) の生成元（位数 5）" />
-      <Heatmap src="data/r112/Rblock.json" label="R の Gram 行列（ブロックのまま、112×112）" blocks={56} caption="左上 3G、右上 τG、右下 2G。" />
-      <Heatmap src="data/r112/R.json" label="R の Gram 行列（公開した LLL 簡約版）" caption="同じ格子の別の基底。構造は見えない。" />
+      <Heatmap src="data/l112/G.json" label="G: L の Gram 行列（56×56）" caption="対称で、対角はすべて偶数。" />
+      <Heatmap src="data/l112/tau.json" label="τ（56×56）" caption="見た目は乱雑。" />
+      <Heatmap src="data/l112/tau2.json" label="τ²" caption="対角に −5 が並ぶだけ。" />
+      <Heatmap src="data/l112/g1.json" label="g₁: SL₂(29) の生成元（位数 5）" />
+      <Heatmap src="data/l112/Rblock.json" label="R の Gram 行列（ブロックのまま、112×112）" blocks={56} caption="左上 3G、右上 τG、右下 2G。" />
+      <Heatmap src="data/l112/R.json" label="R の Gram 行列（公開した LLL 簡約版）" caption="同じ格子の別の基底。構造は見えない。" />
     </div>
     <div class="panel grid max-w-prose gap-2">
       <h3 class="text-[1.1875rem] font-semibold">データから直接読める事実</h3>
@@ -110,7 +110,7 @@ const t = {
         </div>
       ))}
     </div>
-    <p class="note max-w-prose">同じ計算: <a href={pub('verify/theta_series.py')}>verify/theta_series.py</a> <span class="chip-exact">✓ 有理数で厳密</span></p>
+    <p class="note max-w-prose">同じ計算: <a href={pub('code/verify/v2_theta.py')}>code/verify/v2_theta.py</a> <span class="chip-exact">✓ 有理数で厳密</span></p>
   </Sec>
 
   <Sec s={S.budget}>
@@ -118,7 +118,7 @@ const t = {
     <div class="panel grid gap-3">
       <h3 class="text-[1.1875rem] font-semibold" set:html={tex(String.raw`Siegel 平均 $S(n)$（対数目盛）`)} />
       <SiegelChart refs={[{ value: 24360, label: '|SL₂(29)| = 24 360' }]} highlight={112} knownUpTo={88} />
-      <p class="note">頁の生成時に有理数から計算した。同じ計算: <a href={pub('verify/siegel_mean.py')}>verify/siegel_mean.py</a></p>
+      <p class="note">頁の生成時に有理数から計算した。同じ計算: <a href={pub('code/verify/v2_theta.py')}>code/verify/v2_theta.py</a></p>
     </div>
     <div class="overflow-x-auto rounded-md border border-rule bg-sheet">
       <table class="tbl">

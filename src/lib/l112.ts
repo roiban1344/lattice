@@ -1,13 +1,14 @@
-// 112 次元の候補 R のデータ（data/r112/ の写し）を読み、ページに載せる事実をその場で計算する。
+// 112 次元の格子 L₁₁₂ のデータ（data/l112/ の写し）を読み、ページに載せる事実をその場で計算する。
 import fs from 'node:fs';
 import path from 'node:path';
 import { bareiss, blocks, equal, identity, isSymmetric, matmul, parseMatrix, power, scale, transpose, type Mat } from './lattice';
 
-const dir = path.join(process.cwd(), 'data/r112');
+const dir = path.join(process.cwd(), 'data/l112');
 const read = (f: string) => parseMatrix(fs.readFileSync(path.join(dir, f), 'utf8'));
 
-export const PUB_REPO = 'https://github.com/roiban1344/112-dimensional-extremal-even-unimodular-lattice-candidate';
-export const PUB_SHA = '7111ff756ef61000a06e9899569b7b87ea16d074';
+export const PUB_REPO = 'https://github.com/roiban1344/112-dimensional-extremal-even-unimodular-lattice';
+/** タグ v2026-10-18.1 のコミット。 */
+export const PUB_SHA = '14cb2c07c67e121d5150eb9a4108af30a76a39b1';
 export const pub = (p: string) => `${PUB_REPO}/blob/${PUB_SHA}/${p}`;
 
 let cache: ReturnType<typeof load> | null = null;
@@ -23,7 +24,7 @@ function load() {
 }
 export const data = () => (cache ??= load());
 
-/** 公開リポジトリの verify/01_basic.py と同じ検査。生成時に毎回計算する。 */
+/** 公開リポジトリの code/verify/v0_inputs.py が行う入力の検査のうち、基本的なもの。生成時に毎回計算する。 */
 export function basicChecks() {
   const { G, g1, g2, tau, tau2, R, Rblock } = data();
   const I = identity(56);

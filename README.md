@@ -9,7 +9,7 @@
 |---|---|
 | `data/<格子>/` | 元データの写し。`SOURCE.md` に出どころ・コミット・SHA-256 |
 | `src/lib/lattice.ts` | 整数・有理数で厳密な計算（Bareiss の行列式、極値テータ級数、Siegel 平均） |
-| `src/lib/r112.ts` | 112 次元のデータの読み込みと、頁の生成時に毎回走らせる基本検査 |
+| `src/lib/l112.ts` | 112 次元のデータの読み込みと、頁の生成時に毎回走らせる基本検査 |
 | `src/data/` | 頁に載せる事実（出どころ付き）と文献 |
 | `src/sections/` | 本文（Markdown + TeX） |
 | `src/components/` | ヒートマップ、図（生成時に SVG を作る） |
