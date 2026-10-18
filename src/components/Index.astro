@@ -1,0 +1,17 @@
+---
+// 索引の頁の中身: サイト名と、読む順に並べた頁の一覧。
+import { PAGES, SITE_NAME, href, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<article class="mx-auto grid max-w-prose gap-10">
+  <h1 class="text-[2.25rem] font-bold">{SITE_NAME[lang]}</h1>
+  <ol class="grid border-t border-rule">
+    {PAGES.map((p, i) => (
+      <li class="grid grid-cols-[2rem_minmax(0,1fr)] border-b border-rule py-3">
+        <span class="text-muted">{i + 1}</span>
+        <a href={href(lang, p.slug)} class="text-[1.125rem] no-underline hover:underline">{p.title[lang]}</a>
+      </li>
+    ))}
+  </ol>
+</article>

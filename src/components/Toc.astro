@@ -1,18 +1,18 @@
 ---
 // 頁の目次。広い画面では左に貼りつき、狭い画面では頁の先頭で開閉できる。
-interface Props { items: { id: string; title: string }[] }
-const { items } = Astro.props;
+interface Props { items: { id: string; title: string }[]; label: string }
+const { items, label } = Astro.props;
 import { tex } from '../lib/tex';
 ---
-<nav aria-label="目次" class="toc">
+<nav aria-label={label} class="toc">
   <details class="lg:hidden rounded-md border border-rule bg-sheet px-4 py-2" open>
-    <summary class="cursor-pointer text-[.8125rem] font-bold text-muted">目次</summary>
+    <summary class="cursor-pointer text-[.8125rem] font-bold text-muted">{label}</summary>
     <ol class="mt-2 grid gap-1 text-[.875rem]">
       {items.map((it, i) => <li class="grid grid-cols-[1.6rem_1fr]"><span class="text-muted">{i + 1}</span><a href={`#${it.id}`} class="no-underline" set:html={tex(it.title)} /></li>)}
     </ol>
   </details>
   <div class="hidden lg:block sticky top-6">
-    <p class="mb-2 text-[.75rem] font-bold tracking-[.12em] text-muted">目次</p>
+    <p class="mb-2 text-[.75rem] font-bold tracking-[.12em] text-muted">{label}</p>
     <ol class="grid gap-1.5 text-[.8125rem] leading-snug">
       {items.map((it, i) => <li class="grid grid-cols-[1.4rem_1fr]"><span class="text-muted">{i + 1}</span><a href={`#${it.id}`} class="text-muted no-underline hover:text-accent" set:html={tex(it.title)} /></li>)}
     </ol>

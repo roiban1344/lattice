@@ -1,14 +1,23 @@
 ---
 // 頁の枠: 本文の列を画面の中央に置き、広い画面では左の余白に目次を貼る（右に同じ幅の空き列を置いて釣り合わせる）。
-// 節は sections で一元管理し、見出しと目次を同じ配列から作る。
+// 節は sections で一元管理し、見出しと目次を同じ配列から作る。末尾に読む順の前後の頁を置く。
 import Base from './Base.astro';
 import Toc from '../components/Toc.astro';
-interface Props { title: string; description?: string; sections: { id: string; title: string }[] }
-const { title, description, sections } = Astro.props;
+import { PAGES, SITE_NAME, UI, href, type Lang } from '../i18n';
+interface Props { lang: Lang; slug: string; description?: string; sections?: { id: string; title: string }[] }
+const { lang, slug, description, sections = [] } = Astro.props;
+const i = PAGES.findIndex((p) => p.slug === slug);
+const page = PAGES[i], prev = PAGES[i - 1], next = PAGES[i + 1];
 ---
-<Base title={title} description={description}>
+<Base title={`${page.title[lang]} — ${SITE_NAME[lang]}`} description={description} lang={lang} slug={slug}>
   <div class="grid gap-8 lg:grid-cols-[11rem_minmax(0,46rem)_11rem] lg:justify-center lg:gap-12">
-    <Toc items={sections} />
-    <article class="grid gap-14"><slot /></article>
+    {sections.length ? <Toc items={sections} label={UI.contents[lang]} /> : <div />}
+    <article class="grid gap-14">
+      <slot />
+      <nav class="grid grid-cols-2 gap-4 border-t border-rule pt-4 text-[.9375rem]" aria-label={UI.pages[lang]}>
+        <span>{prev && <><span class="note block">{UI.prev[lang]}</span><a href={href(lang, prev.slug)}>{prev.title[lang]}</a></>}</span>
+        <span class="text-right">{next && <><span class="note block">{UI.next[lang]}</span><a href={href(lang, next.slug)}>{next.title[lang]}</a></>}</span>
+      </nav>
+    </article>
   </div>
 </Base>
