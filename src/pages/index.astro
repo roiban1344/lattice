@@ -3,10 +3,8 @@ import Base from '../layouts/Base.astro';
 import { tex } from '../lib/tex';
 import { SITE } from '../data/site';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-// 格子ごとの頁。順番は読む順（道具の検定 → 証明の型 → 候補）。
+// 格子ごとの頁。
 const lattices = [
-  { dim: 72, name: String.raw`$\Gamma_{72}$`, who: 'Nebe 2010', role: '道具の検定', what: String.raw`本物の極値格子で衝突が $0$ になり、外れの $8$ 構造では文献のノルム $6$ の本数を $1$ 本の違いもなく再現する。`, href: `${base}g72/`, status: '定理' },
-  { dim: 88, name: String.raw`$L_{88}$`, who: '坂本 2026', role: '証明の型', what: String.raw`テンソル階数ごとの Coulangeon の評価で $3$ 段まで閉じ、残る $1$ 段を有限の列挙で閉じる。この型を $112$ 次元に持ち込みたい。`, href: `${base}r88/`, status: '定理' },
   { dim: 112, name: String.raw`$R_{112}$`, who: '2026-10', role: '候補', what: String.raw`$56$ 次元の格子 $2$ 枚を $\mathrm{SL}_2(29)$ を保って貼り合わせ、最小ノルム $10$ を主張する。論証を $10$ 段に分けて公開する。`, href: `${base}r112/`, status: '候補' },
 ];
 const lead = tex(String.raw`極値偶ユニモジュラー格子の $112$ 次元の候補を見つけた。それが本物かどうかを、既に知られた極値格子と同じ物差しで測り直している。まず同じ道具が本物を本物と判定できることを示し、次に候補の論証を $1$ 段ずつ公開する。私たちが幻を見ていないかを、読む人が自分の目で確かめられるようにしたい。`);

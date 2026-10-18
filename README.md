@@ -3,12 +3,6 @@
 極値偶ユニモジュラー格子の構成と検証を、1 格子 1 頁で図と要点として並べるサイト。
 公開先: https://roiban1344.github.io/lattice/
 
-## 役割
-
-- **このリポジトリ**: 解説の頁、格子をまたいで使う計算の道具（`src/lib/`）、各格子のデータの写し（`data/`）。今後、重い検証のコードもここへ移す。
-- **[112-dimensional-extremal-even-unimodular-lattice-candidate](https://github.com/roiban1344/112-dimensional-extremal-even-unimodular-lattice-candidate)**: 112 次元の初報。データと軽い検算だけで、以後は固定。
-- 依存は一方向: このリポジトリが初報のデータを（コミットとハッシュを固定して）写して使う。初報の側はこのリポジトリに依存しない。
-
 ## 構成
 
 | 場所 | 中身 |
