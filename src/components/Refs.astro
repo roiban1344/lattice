@@ -4,5 +4,5 @@ interface Props { keys: string[] }
 const { keys } = Astro.props;
 ---
 <ul class="grid max-w-prose gap-2 text-[.875rem] leading-relaxed">
-  {keys.map((k) => <li id={`ref-${k}`}>[{k}] {refs[k].text} <a href={refs[k].url}>{refs[k].link}</a></li>)}
+  {keys.map((k) => <li id={`ref-${k}`}>[{k}] {refs[k].text} {refs[k].url && <a href={refs[k].url}>{refs[k].link}</a>}</li>)}
 </ul>

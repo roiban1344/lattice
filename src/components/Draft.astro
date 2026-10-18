@@ -1,0 +1,10 @@
+---
+// 執筆前の頁の中身: 題と「執筆中」の一文だけ。
+import { UI, pageOf, type Lang } from '../i18n';
+interface Props { lang: Lang; slug: string }
+const { lang, slug } = Astro.props;
+---
+<header class="grid gap-4">
+  <h1 class="text-[2.25rem] font-bold">{pageOf(slug)!.title[lang]}</h1>
+  <p class="note">{UI.draft[lang]}</p>
+</header>

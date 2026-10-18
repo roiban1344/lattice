@@ -1,0 +1,9 @@
+In three dimensions the largest possible kissing number is $12$. Whether a thirteenth ball can also touch the central one was debated in the seventeenth century, and the answer, no, was proved by Schütte and van der Waerden [[SvdW53]](#ref-SvdW53). For $E_8$ the kissing number is $240$, and for the Leech lattice it is $196\,560$. These are the largest possible values in dimensions $8$ and $24$ [[OS79]](#ref-OS79).
+
+An extremal lattice is not necessarily the densest packing of its dimension. The comparison above is only among even unimodular lattices of that dimension; other lattices, and packings that do not come from lattices, are not included. Finding the densest packing is hard even in three dimensions. Kepler conjectured in 1611 that no packing of equal balls is denser than the face-centred cubic arrangement (the way oranges are often stacked), which fills $\pi/\sqrt{18}\approx 74.05\%$ of space. Hales announced a proof in 1998, published in 2005 [[Hal05]](#ref-Hal05).
+
+In dimensions $8$ and $24$, by contrast, the extremal lattices $E_8$ and $\Lambda_{24}$ give the densest sphere packings of all. Viazovska proved this in dimension $8$ [[Via17]](#ref-Via17), and Cohn, Kumar, Miller, Radchenko and Viazovska in dimension $24$ [[CKMRV17]](#ref-CKMRV17).
+
+The second reason concerns how the vectors of a fixed norm are distributed: in an extremal lattice, they are spread evenly over the sphere on which they lie. This is made precise as follows. A finite set $X$ on a sphere is called a **spherical $t$-design** if, for every polynomial $f$ of degree at most $t$, the average of $f$ over $X$ equals its average over the whole sphere.
+
+Venkov showed the following. In an extremal lattice of dimension $n$, for every nonzero norm, the vectors of that norm form a spherical $11$-design, $7$-design or $3$-design according as $n$ leaves remainder $0$, $8$ or $16$ on division by $24$ [[BV01, Cor. 4.1]](#ref-BV01).

@@ -1,43 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { tex } from '../lib/tex';
-import { SITE } from '../data/site';
-const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-// 格子ごとの頁。順番は読む順（道具の検定 → 証明の型 → 候補）。
-const lattices = [
-  { dim: 72, name: String.raw`$\Gamma_{72}$`, who: 'Nebe 2010', role: '道具の検定', what: String.raw`本物の極値格子で衝突が $0$ になり、外れの $8$ 構造では文献のノルム $6$ の本数を $1$ 本の違いもなく再現する。`, href: `${base}g72/`, status: '定理' },
-  { dim: 88, name: String.raw`$L_{88}$`, who: '坂本 2026', role: '証明の型', what: String.raw`テンソル階数ごとの Coulangeon の評価で $3$ 段まで閉じ、残る $1$ 段を有限の列挙で閉じる。この型を $112$ 次元に持ち込みたい。`, href: `${base}r88/`, status: '定理' },
-  { dim: 112, name: String.raw`$R_{112}$`, who: '2026-10', role: '候補', what: String.raw`$56$ 次元の格子 $2$ 枚を $\mathrm{SL}_2(29)$ を保って貼り合わせ、最小ノルム $10$ を主張する。論証を $10$ 段に分けて公開する。`, href: `${base}r112/`, status: '候補' },
-];
-const lead = tex(String.raw`極値偶ユニモジュラー格子の $112$ 次元の候補を見つけた。それが本物かどうかを、既に知られた極値格子と同じ物差しで測り直している。まず同じ道具が本物を本物と判定できることを示し、次に候補の論証を $1$ 段ずつ公開する。私たちが幻を見ていないかを、読む人が自分の目で確かめられるようにしたい。`);
+import Index from '../components/Index.astro';
+import { SITE_NAME } from '../i18n';
 ---
-<Base title={SITE.name} description="112 次元の極値格子の候補を、既知の極値格子と同じ物差しで測り直して公開している。">
-  <article class="grid gap-12">
-    <header class="grid max-w-prose gap-4">
-      <h1 class="text-[2.875rem] font-extrabold">{SITE.name}</h1>
-      <p class="text-[1.1875rem] leading-[1.9]" set:html={lead} />
-      <p>用語は <a href={`${base}primer/`}>前提</a> の頁にまとめた。格子とは何かから始めている。</p>
-    </header>
-    <section class="grid gap-3">
-      <h2 class="text-[1.5rem] font-extrabold">読む順</h2>
-      <ol class="grid max-w-prose border-t border-rule">
-        {lattices.map((l) => (
-          <li class="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-3 border-b border-rule py-4">
-            <span class="num-font text-[1.25rem] text-accent">{l.dim}</span>
-            <span class="grid gap-1">
-              <span class="flex flex-wrap items-baseline gap-x-3 gap-y-1"><a href={l.href} class="text-[1.125rem] font-bold" set:html={tex(l.name)} /><span class="note">{l.who}</span><span class={l.status === '候補' ? 'chip-cand' : 'chip-exact'}>{l.role}</span></span>
-              <span class="text-[.9375rem]" set:html={tex(l.what)} />
-            </span>
-          </li>
-        ))}
-      </ol>
-    </section>
-    <section class="grid max-w-prose gap-3">
-      <h2 class="text-[1.5rem] font-extrabold">リポジトリ</h2>
-      <ul class="grid gap-2">
-        <li><a href="https://github.com/roiban1344/lattice">roiban1344/lattice</a>: この頁の元。格子をまたいで使う検証のコードと、各格子のデータの写し（出どころとハッシュ付き）を集めていく。</li>
-        <li set:html={tex(String.raw`<a href="https://github.com/roiban1344/112-dimensional-extremal-even-unimodular-lattice-candidate">112-dimensional-extremal-even-unimodular-lattice-candidate</a>: $112$ 次元の初報。データと軽い検算だけを置き、以後は手を入れない。`)} />
-      </ul>
-    </section>
-  </article>
-</Base>
+<Base title={SITE_NAME.en} lang="en"><Index lang="en" /></Base>

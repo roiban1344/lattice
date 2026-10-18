@@ -1,41 +1,37 @@
-# lattice — 格子ノート
+# Extremal Even Unimodular Lattices
 
-極値偶ユニモジュラー格子の構成と検証を、1 格子 1 頁で図と要点として並べるサイト。
-公開先: https://roiban1344.github.io/lattice/
+[日本語](README.ja.md)
 
-## 役割
+Source of the website https://roiban1344.github.io/lattice/, an introduction to extremal even unimodular lattices: what they are, how they were found, how their extremality is proved, and the 112-dimensional example $L_{112}$. The pages are in English (authoritative) and Japanese (`/ja/`). The website is being rewritten; pages not yet written say so.
 
-- **このリポジトリ**: 解説の頁、格子をまたいで使う計算の道具（`src/lib/`）、各格子のデータの写し（`data/`）。今後、重い検証のコードもここへ移す。
-- **[112-dimensional-extremal-even-unimodular-lattice-candidate](https://github.com/roiban1344/112-dimensional-extremal-even-unimodular-lattice-candidate)**: 112 次元の初報。データと軽い検算だけで、以後は固定。
-- 依存は一方向: このリポジトリが初報のデータを（コミットとハッシュを固定して）写して使う。初報の側はこのリポジトリに依存しない。
+## Layout
 
-## 構成
-
-| 場所 | 中身 |
+| Path | Contents |
 |---|---|
-| `data/<格子>/` | 元データの写し。`SOURCE.md` に出どころ・コミット・SHA-256 |
-| `src/lib/lattice.ts` | 整数・有理数で厳密な計算（Bareiss の行列式、極値テータ級数、Siegel 平均） |
-| `src/lib/r112.ts` | 112 次元のデータの読み込みと、頁の生成時に毎回走らせる基本検査 |
-| `src/data/` | 頁に載せる事実（出どころ付き）と文献 |
-| `src/sections/` | 本文（Markdown + TeX） |
-| `src/components/` | ヒートマップ、図（生成時に SVG を作る） |
+| `src/i18n.ts` | languages, the list of pages in reading order, and their titles |
+| `src/sections/<page>/<lang>/` | page text in Markdown with TeX, one file per section |
+| `src/views/` | one component per page: assembles the sections and inserts figures and tables |
+| `src/lib/lattice.ts` | exact integer and rational arithmetic (Bareiss determinants, extremal theta series, Siegel means) |
+| `src/components/` | heatmaps, charts and other figures, generated as SVG at build time |
+| `src/data/refs.ts` | bibliography |
+| `data/<lattice>/` | copies of published data; `SOURCE.md` records origin, commit and SHA-256 |
 
-数式は TeX（remark-math + rehype-katex、生成時に KaTeX で描画）。スタイルは Tailwind CSS 3。
+Mathematics is typeset with KaTeX at build time (remark-math and rehype-katex); styles use Tailwind CSS 3.
 
-## 手元で動かす
+## Running locally
 
 ```bash
 npm ci
 npm run dev      # http://localhost:4321/lattice/
-npm run build    # dist/ に静的ファイル
+npm run build    # static files in dist/
 ```
 
-`main` に push すると GitHub Actions が GitHub Pages へ配置する（`.github/workflows/deploy.yml`）。
+Pushing to `main` deploys to GitHub Pages through GitHub Actions (`.github/workflows/deploy.yml`).
 
-## 著者と AI の使用
+## Authorship and use of AI
 
-探索・コード・計算・文章の大部分は AI（Anthropic の Claude）による。方向づけ、判断、公開の責任は roiban1344。
+Most of the exploration, code, computation and writing was done by AI (Claude, Anthropic). roiban1344 directs the work and is responsible for publication.
 
-## ライセンス
+## License
 
-コードは MIT、文章とデータは CC BY 4.0。
+Code: MIT. Text and data: CC BY 4.0.
