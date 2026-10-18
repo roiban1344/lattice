@@ -1,5 +1,5 @@
 // 文献。本文を読んだもの、または Catalogue のように直接見たものだけを載せる。
-export const refs: Record<string, { text: string; url: string; link: string }> = {
+export const refs: Record<string, { text: string; url?: string; link?: string }> = {
   MOS75: { text: 'C. L. Mallows, A. M. Odlyzko, N. J. A. Sloane, Upper bounds for modular forms, lattices, and codes, J. Algebra 36 (1975) 68–76.', url: 'https://doi.org/10.1016/0021-8693(75)90155-6', link: 'doi' },
   Neb98: { text: 'G. Nebe, Some cyclo-quaternionic lattices, J. Algebra 199 (1998) 472–498.', url: 'https://doi.org/10.1006/jabr.1997.7163', link: 'doi' },
   Neb12: { text: 'G. Nebe, An even unimodular 72-dimensional lattice of minimum 8, J. reine angew. Math. 673 (2012) 237–247.', url: 'https://arxiv.org/abs/1008.2862', link: 'arXiv:1008.2862' },
@@ -11,4 +11,11 @@ export const refs: Record<string, { text: string; url: string; link: string }> =
   SPLAG: { text: 'J. H. Conway, N. J. A. Sloane, Sphere Packings, Lattices and Groups, 3rd ed., Springer 1999.', url: 'https://doi.org/10.1007/978-1-4757-6568-7', link: 'doi' },
   ATLAS: { text: 'R. A. Wilson et al., ATLAS of Group Representations, v3: L₂(29).', url: 'https://brauer.maths.qmul.ac.uk/Atlas/v3/lin/L229/', link: 'web' },
   Bar68: { text: "E. H. Bareiss, Sylvester's identity and multistep integer-preserving Gaussian elimination, Math. Comp. 22 (1968) 565–578.", url: 'https://doi.org/10.1090/S0025-5718-1968-0226829-0', link: 'doi' },
+  Ser73: { text: 'J.-P. Serre, A Course in Arithmetic, Graduate Texts in Mathematics 7, Springer, 1973.', url: 'https://doi.org/10.1007/978-1-4684-9884-4', link: 'doi' },
+  Sie69: { text: 'C. L. Siegel, Berechnung von Zetafunktionen an ganzzahligen Stellen, Nachr. Akad. Wiss. Göttingen Math.-Phys. Kl. II 1969, 87–102.' },
+  JR11: { text: 'P. Jenkins, J. Rouse, Bounds for coefficients of cusp forms and extremal lattices, Bull. London Math. Soc. 43 (2011) 927–938.', url: 'https://doi.org/10.1112/blms/bdr030', link: 'doi' },
+  Nie73: { text: 'H.-V. Niemeier, Definite quadratische Formen der Dimension 24 und Diskriminante 1, J. Number Theory 5 (1973) 142–178.', url: 'https://doi.org/10.1016/0022-314X(73)90068-1', link: 'doi' },
+  BV01: { text: 'C. Bachoc, B. Venkov, Modular forms, lattices and spherical designs, in: Réseaux euclidiens, designs sphériques et formes modulaires, Monogr. Enseign. Math. 37 (2001).' },
+  Via17: { text: 'M. Viazovska, The sphere packing problem in dimension 8, Ann. of Math. 185 (2017) 991–1015.', url: 'https://arxiv.org/abs/1603.04246', link: 'arXiv:1603.04246' },
+  CKMRV17: { text: 'H. Cohn, A. Kumar, S. D. Miller, D. Radchenko, M. Viazovska, The sphere packing problem in dimension 24, Ann. of Math. 185 (2017) 1017–1033.', url: 'https://arxiv.org/abs/1603.06518', link: 'arXiv:1603.06518' },
 };

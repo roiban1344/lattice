@@ -47,6 +47,9 @@
   .prose-lat :where(h2) { @apply font-display font-bold text-[1.75rem] leading-snug mt-0; }
   .prose-lat :where(h3) { @apply font-display font-semibold; }
   .prose-lat :where(code)::before, .prose-lat :where(code)::after { content: none; }
+  /* 定理は引用ブロック（> **Theorem.** …）で書き、左罫の囲みにする */
+  .prose-lat :where(blockquote) { @apply not-italic font-normal border-l-2 border-ink pl-4; }
+  .prose-lat :where(blockquote p:first-of-type)::before, .prose-lat :where(blockquote p:last-of-type)::after { content: none; }
   .prose-lat .katex-display { overflow-x: auto; overflow-y: hidden; padding-block: .25rem; }
   .chip { @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-2 text-[.8125rem] leading-6 not-italic; }
   .chip-exact { @apply chip border-ok text-ok bg-ok-bg; }

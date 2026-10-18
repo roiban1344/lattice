@@ -68,12 +68,12 @@ const t = {
   <Sec s={S.matrices}>
     <div class="prose-lat"><Matrices /></div>
     <div class="grid gap-6 sm:grid-cols-2">
-      <Heatmap src="data/l112/G.json" label="G: L の Gram 行列（56×56）" caption="対称で、対角はすべて偶数。" />
-      <Heatmap src="data/l112/tau.json" label="τ（56×56）" caption="見た目は乱雑。" />
-      <Heatmap src="data/l112/tau2.json" label="τ²" caption="対角に −5 が並ぶだけ。" />
-      <Heatmap src="data/l112/g1.json" label="g₁: SL₂(29) の生成元（位数 5）" />
-      <Heatmap src="data/l112/Rblock.json" label="R の Gram 行列（ブロックのまま、112×112）" blocks={56} caption="左上 3G、右上 τG、右下 2G。" />
-      <Heatmap src="data/l112/R.json" label="R の Gram 行列（公開した LLL 簡約版）" caption="同じ格子の別の基底。構造は見えない。" />
+      <Heatmap lang="ja" src="data/l112/G.json" label="G: L の Gram 行列（56×56）" caption="対称で、対角はすべて偶数。" />
+      <Heatmap lang="ja" src="data/l112/tau.json" label="τ（56×56）" caption="見た目は乱雑。" />
+      <Heatmap lang="ja" src="data/l112/tau2.json" label="τ²" caption="対角に −5 が並ぶだけ。" />
+      <Heatmap lang="ja" src="data/l112/g1.json" label="g₁: SL₂(29) の生成元（位数 5）" />
+      <Heatmap lang="ja" src="data/l112/Rblock.json" label="R の Gram 行列（ブロックのまま、112×112）" blocks={56} caption="左上 3G、右上 τG、右下 2G。" />
+      <Heatmap lang="ja" src="data/l112/R.json" label="R の Gram 行列（公開した LLL 簡約版）" caption="同じ格子の別の基底。構造は見えない。" />
     </div>
     <div class="panel grid max-w-prose gap-2">
       <h3 class="text-[1.1875rem] font-semibold">データから直接読める事実</h3>
