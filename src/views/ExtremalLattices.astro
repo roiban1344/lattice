@@ -1,6 +1,5 @@
 ---
-// 頁 1「極値格子とは」の中身。本文は sections/extremal-lattices/<lang>/ の Markdown。
-// ファイル名は <順番>-<節の id>[.<部分>].md。同じ id の部分は一つの節として続けて表示し、題は最初の部分の frontmatter。
+// 頁 1「極値偶ユニモジュラー格子とは」の中身。本文は sections/extremal-lattices/<lang>/ の Markdown（読み込みは lib/sections.ts）。
 // 図と表はここで生成時に計算して、決まった部分の後ろに差し込む（キーは「id」または「id.部分」）。
 import Page from '../layouts/Page.astro';
 import Sec from '../components/Sec.astro';
@@ -13,23 +12,12 @@ import { bareiss, extremalTheta } from '../lib/lattice';
 import { tex } from '../lib/tex';
 import { n$ } from '../lib/num';
 import { UI, pageOf, type Lang } from '../i18n';
+import { loadSections } from '../lib/sections';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 
-type Md = { frontmatter: { title: string }; Content: any };
-const all = import.meta.glob<Md>('../sections/extremal-lattices/*/*.md', { eager: true });
-const files = Object.entries(all)
-  .filter(([p]) => p.includes(`/${lang}/`))
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([p, m]) => {
-    const [id, part] = p.split('/').pop()!.replace(/^\d+-|\.md$/g, '').split('.');
-    return { id, key: part ? `${id}.${part}` : id, title: m.frontmatter.title, Content: m.Content };
-  });
-const parts = [...new Set(files.map((f) => f.id))].map((id) => {
-  const fs = files.filter((f) => f.id === id);
-  return { id, title: fs[0].title, files: fs };
-});
+const parts = loadSections('extremal-lattices', lang);
 const sections = [...parts.map(({ id, title }) => ({ id, title })), { id: 'references', title: { en: 'References', ja: '文献' }[lang] }];
 
 for (const [name, G] of [['E8', E8], ['Leech', LEECH()]] as const)

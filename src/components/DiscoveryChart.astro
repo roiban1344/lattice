@@ -1,0 +1,38 @@
+---
+// 次元ごとに、最初の極値格子が発表された年を点で示す（生成時に SVG を組む）。例の知られていない次元は右端の欄に白抜きの点で置く。
+// 上界が上がる次元（24 の倍数）には横の罫を引く。点に触れると、その格子と出典が出る（SVG の title）。
+interface Point { n: number; year: number; label: string; tip: string }
+interface Props { points: Point[]; open: number[]; openLabel: string; xLabel: string; yLabel: string; aria: string; caption: string }
+const { points, open, openLabel, xLabel, yLabel, aria, caption } = Astro.props;
+
+const W = 640, H = 400, L = 56, R = 96, T = 16, B = 46;
+const y0 = 1960, y1 = 2030, nMin = 16, nMax = 128;
+const x = (year: number) => L + ((year - y0) / (y1 - y0)) * (W - L - R);
+const xOpen = W - R / 2;
+const y = (n: number) => T + ((nMax - n) / (nMax - nMin)) * (H - T - B);
+const years = [1960, 1970, 1980, 1990, 2000, 2010, 2020, 2030];
+const dims = [24, 48, 72, 96, 120];
+---
+<figure class="mx-auto grid w-full max-w-[40rem] gap-2">
+  <svg viewBox={`0 0 ${W} ${H}`} class="fig h-auto w-full" role="img" aria-label={aria}>
+    {dims.map((n) => <line x1={L} x2={W - 8} y1={y(n)} y2={y(n)} stroke="rgb(217,217,217)" stroke-width="1" />)}
+    {dims.map((n) => <text x={L - 8} y={y(n) + 4} text-anchor="end" font-size="13" fill="rgb(84,84,84)">{n}</text>)}
+    {years.map((t) => <text x={x(t)} y={H - B + 18} text-anchor="middle" font-size="13" fill="rgb(84,84,84)">{t}</text>)}
+    <line x1={L} x2={x(y1)} y1={H - B} y2={H - B} stroke="rgb(17,17,17)" stroke-width="1" />
+    <line x1={xOpen - R / 2 + 10} x2={xOpen - R / 2 + 10} y1={T} y2={H - B} stroke="rgb(217,217,217)" stroke-width="1" />
+    <text x={xOpen} y={H - B + 18} text-anchor="middle" font-size="13" fill="rgb(84,84,84)">{openLabel}</text>
+    <text x={(L + x(y1)) / 2} y={H - 6} text-anchor="middle" font-size="13">{xLabel}</text>
+    <text transform={`translate(14 ${(T + H - B) / 2}) rotate(-90)`} text-anchor="middle" font-size="13">{yLabel}</text>
+    {points.map((p) => (
+      <g>
+        <title>{p.tip}</title>
+        <circle cx={x(p.year)} cy={y(p.n)} r="12" fill="transparent" />
+        <circle cx={x(p.year)} cy={y(p.n)} r="5" fill="rgb(26,79,160)" stroke="#fff" stroke-width="2" />
+        <text x={x(p.year) + (p.year > 2015 ? -10 : 10)} y={y(p.n) + 4} text-anchor={p.year > 2015 ? 'end' : 'start'} font-size="13">{p.label}</text>
+      </g>
+    ))}
+    {open.map((n) => <circle cx={xOpen} cy={y(n)} r="5" fill="#fff" stroke="rgb(84,84,84)" stroke-width="1.5" />)}
+    {open.map((n) => <text x={xOpen + 10} y={y(n) + 4} font-size="13" fill="rgb(84,84,84)">{n}</text>)}
+  </svg>
+  <figcaption class="note max-w-prose" set:html={caption} />
+</figure>
