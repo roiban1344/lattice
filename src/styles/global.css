@@ -62,7 +62,7 @@
   .tbl th { @apply whitespace-nowrap border-b border-rule px-3 py-2 text-left font-bold text-muted; }
   .tbl td { @apply border-b border-rule px-3 py-2 align-top; }
   .tbl tr:last-child td { @apply border-b-0; }
-  .tbl .num { @apply whitespace-nowrap text-right font-mono tabular-nums; }
+  .tbl .num { @apply whitespace-nowrap text-right tabular-nums; }
   /* 図の中の文字。数は KaTeX の書体、和文は Noto Sans JP へ落ちる */
   .fig text { font-family: KaTeX_Main, 'Times New Roman', 'Noto Sans JP', serif; }
   .fig .fo { font-size: 12px; line-height: 1.2; color: rgb(var(--ink)); }

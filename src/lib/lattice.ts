@@ -128,7 +128,13 @@ export function extremalTheta(n: number, N: number) {
   const coef = M.map((row) => row[r]);
   const theta: Q[] = [];
   for (let e = 0; e < N; e++) theta.push(coef.reduce((s, c, j) => add(s, mul(c, q(mons[j][e]))), q(0n)));
-  return { min: 2 * m, coefficients: theta.map((t) => t[0] / t[1]), integral: theta.every((t) => t[1] === 1n) };
+  return {
+    min: 2 * m,
+    coefficients: theta.map((t) => t[0] / t[1]),
+    integral: theta.every((t) => t[1] === 1n),
+    /** 積 θ_{E8}^{k-3j} θ_{Λ24}^j（j = 0, 1, …）の級数の最初の N 項と、和を取るときの係数（分子, 分母）。 */
+    products: mons.map((P, j) => ({ e8: k - 3 * j, leech: j, series: P.slice(0, N), weight: coef[j] })),
+  };
 }
 
 /** ベルヌーイ数 B_0..B_N。 */

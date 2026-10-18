@@ -18,4 +18,6 @@ export const refs: Record<string, { text: string; url?: string; link?: string }>
   BV01: { text: 'C. Bachoc, B. Venkov, Modular forms, lattices and spherical designs, in: Réseaux euclidiens, designs sphériques et formes modulaires, Monogr. Enseign. Math. 37 (2001).' },
   Via17: { text: 'M. Viazovska, The sphere packing problem in dimension 8, Ann. of Math. 185 (2017) 991–1015.', url: 'https://arxiv.org/abs/1603.04246', link: 'arXiv:1603.04246' },
   CKMRV17: { text: 'H. Cohn, A. Kumar, S. D. Miller, D. Radchenko, M. Viazovska, The sphere packing problem in dimension 24, Ann. of Math. 185 (2017) 1017–1033.', url: 'https://arxiv.org/abs/1603.06518', link: 'arXiv:1603.06518' },
+  Lee67: { text: 'J. Leech, Notes on sphere packings, Canad. J. Math. 19 (1967) 251–267.', url: 'https://doi.org/10.4153/CJM-1967-017-0', link: 'doi' },
+  Con69: { text: "J. H. Conway, A characterisation of Leech's lattice, Invent. Math. 7 (1969) 137–142.", url: 'https://doi.org/10.1007/BF01389796', link: 'doi' },
 };

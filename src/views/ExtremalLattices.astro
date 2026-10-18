@@ -1,11 +1,13 @@
 ---
-// 頁 1「極値格子とは」の中身。本文は sections/extremal-lattices/<lang>/ の Markdown（節ごとに 1 ファイル、題は frontmatter）。
-// 図と表はここで生成時に計算して、決まった節の後ろに差し込む。
+// 頁 1「極値格子とは」の中身。本文は sections/extremal-lattices/<lang>/ の Markdown。
+// ファイル名は <順番>-<節の id>[.<部分>].md。同じ id の部分は一つの節として続けて表示し、題は最初の部分の frontmatter。
+// 図と表はここで生成時に計算して、決まった部分の後ろに差し込む（キーは「id」または「id.部分」）。
 import Page from '../layouts/Page.astro';
 import Sec from '../components/Sec.astro';
 import Heatmap from '../components/Heatmap.astro';
 import Refs from '../components/Refs.astro';
 import { E8 } from '../lib/e8';
+import { LEECH } from '../lib/leech';
 import { bareiss, extremalTheta } from '../lib/lattice';
 import { tex } from '../lib/tex';
 import { n$ } from '../lib/num';
@@ -16,13 +18,33 @@ const { lang } = Astro.props;
 
 type Md = { frontmatter: { title: string }; Content: any };
 const all = import.meta.glob<Md>('../sections/extremal-lattices/*/*.md', { eager: true });
-const parts = Object.entries(all)
+const files = Object.entries(all)
   .filter(([p]) => p.includes(`/${lang}/`))
   .sort(([a], [b]) => a.localeCompare(b))
-  .map(([p, m]) => ({ id: p.split('/').pop()!.replace(/^\d+-|\.md$/g, ''), title: m.frontmatter.title, Content: m.Content }));
+  .map(([p, m]) => {
+    const [id, part] = p.split('/').pop()!.replace(/^\d+-|\.md$/g, '').split('.');
+    return { id, key: part ? `${id}.${part}` : id, title: m.frontmatter.title, Content: m.Content };
+  });
+const parts = [...new Set(files.map((f) => f.id))].map((id) => {
+  const fs = files.filter((f) => f.id === id);
+  return { id, title: fs[0].title, files: fs };
+});
 const sections = [...parts.map(({ id, title }) => ({ id, title })), { id: 'references', title: { en: 'References', ja: '文献' }[lang] }];
 
-if (bareiss(E8).det !== 1n) throw new Error('E8: det != 1');
+for (const [name, G] of [['E8', E8], ['Leech', LEECH()]] as const)
+  if (bareiss(G).det !== 1n || G.some((r, i) => r[i] % 2)) throw new Error(`${name}: not even unimodular`);
+const e8tex = String.raw`G_{E_8}=\begin{pmatrix}` + E8.map((r) => r.map((v) => (v ? String(v) : String.raw`\cdot`)).join('&')).join(String.raw`\\`) + String.raw`\end{pmatrix}`;
+
+// 48 次元の例: θ_{E8}^6, θ_{E8}^3 θ_{Λ24}, θ_{Λ24}^2 と、q, q^2 の係数を消す一次結合。
+const ex = extremalTheta(48, 5);
+const frac = ([p, d]: [bigint, bigint]) => (d === 1n ? String(p) : `${p < 0n ? '-' : ''}\\tfrac{${p < 0n ? -p : p}}{${d}}`);
+const power = (b: string, e: number) => (e === 0 ? '' : e === 1 ? b : `${b}^{${e}}`);
+const exRows = ex.products.map((pr) => ({
+  name: `$${power(String.raw`\theta_{E_8}`, pr.e8)}${power(String.raw`\theta_{\Lambda_{24}}`, pr.leech)}$`,
+  weight: `$${frac(pr.weight as [bigint, bigint])}$`,
+  series: pr.series,
+}));
+
 
 // 次元 8, 16, …, 120 の極値テータ級数から、上界と最小ノルムのベクトルの本数。
 const rows = Array.from({ length: 15 }, (_, i) => 8 * (i + 1)).map((n) => {
@@ -36,23 +58,58 @@ const t = {
     en: String.raw`Positive entries are red, negative entries blue, zeros grey. The diagonal entries are $2$, and $\det G=1$ (computed when the page is built).`,
     ja: String.raw`正の成分は赤、負の成分は青、$0$ は灰色で示しています。対角成分はすべて $2$ で、$\det G=1$ です（頁の生成時に計算）。`,
   }[lang],
+  leech: { en: 'Gram matrix of the Leech lattice Λ₂₄ (24×24)', ja: 'Leech 格子 Λ₂₄ の Gram 行列（24×24）' }[lang],
+  leechcap: {
+    en: String.raw`From the construction with the extended Golay code <a href="#ref-SPLAG">[SPLAG, Ch. 4]</a>. The diagonal entries are $4$, and $\det G=1$ (computed when the page is built).`,
+    ja: String.raw`拡大 Golay 符号を用いた構成による Gram 行列です <a href="#ref-SPLAG">[SPLAG, Ch. 4]</a>。対角成分はすべて $4$ で、$\det G=1$ です（頁の生成時に計算）。`,
+  }[lang],
+  weight: { en: 'weight', ja: '重み' }[lang],
+  sum: { en: 'sum', ja: '和' }[lang],
+  excap: {
+    en: String.raw`Dimension $48$. Each row lists the first coefficients of a product of theta series; the last row is the sum of the rows multiplied by their weights. The weights are chosen so that the shaded coefficients vanish. Computed in exact rational arithmetic when the page is built.`,
+    ja: String.raw`$48$ 次元の場合です。各行はテータ級数の積の最初の係数で、最後の行は各行に重みを掛けて足したものです。網掛けの係数が $0$ になるように重みを選んでいます。頁の生成時に有理数で厳密に計算しています。`,
+  }[lang],
   head: { en: [String.raw`dimension $n$`, String.raw`bound $2\lfloor n/24\rfloor+2$`, 'vectors of minimal norm'], ja: [String.raw`次元 $n$`, String.raw`上界 $2\lfloor n/24\rfloor+2$`, '最小ノルムのベクトルの本数'] }[lang].map(tex),
   cap: {
     en: 'Numbers of vectors of minimal norm in an extremal lattice, read off from the unique modular form described above. They are computed in exact rational arithmetic when the page is built. The table says nothing about whether such a lattice exists.',
     ja: '極値格子の最小ノルムのベクトルの本数です。上で述べた、ただ一つに決まるモジュラー形式の係数から読み取れます。頁の生成時に有理数で厳密に計算しています。この表は、そのような格子が存在するかどうかについては何も述べていません。',
   }[lang],
 };
-const refKeys = ['Ser73', 'Nie73', 'Sie69', 'MOS75', 'JR11', 'Via17', 'CKMRV17', 'BV01'];
+const refKeys = ['Ser73', 'Nie73', 'Lee67', 'Con69', 'SPLAG', 'Sie69', 'MOS75', 'JR11', 'Via17', 'CKMRV17', 'BV01'];
 ---
 <Page lang={lang} slug="extremal-lattices" sections={sections}>
   <header class="grid gap-4">
     <h1 class="text-[2.25rem] font-bold">{{ en: 'Extremal lattices', ja: '極値格子とは' }[lang]}</h1>
     {parts.length === 0 && <p class="note">{UI.draft[lang]}</p>}
   </header>
-  {parts.map(({ id, title, Content }) => (
+  {parts.map(({ id, title, files }) => (
     <Sec s={{ id, title }}>
-      <div class="prose-lat"><Content /></div>
-      {id === 'lattices' && <div class="max-w-[22rem]"><Heatmap src="data/e8.json" lang={lang} label={t.e8} caption={tex(t.e8cap)} /></div>}
+      {files.map(({ key, Content }) => (
+        <>
+          <div class="prose-lat"><Content /></div>
+          {key === 'lattices' && (
+            <div class="grid items-center gap-6 sm:grid-cols-[auto_minmax(0,1fr)]">
+              <div class="overflow-x-auto" set:html={tex(`$$${e8tex}$$`)} />
+              <Heatmap src="data/e8.json" lang={lang} label={t.e8} caption={tex(t.e8cap)} />
+            </div>
+          )}
+          {key === 'even-unimodular' && <div class="max-w-[24rem]"><Heatmap src="data/leech.json" lang={lang} label={t.leech} caption={tex(t.leechcap)} /></div>}
+          {key === 'bound.1' && (
+            <figure class="grid gap-2">
+              <div class="overflow-x-auto">
+                <table class="tbl">
+                  <thead><tr><th /><th class="num">{t.weight}</th>{[0, 1, 2, 3, 4].map((e) => <th class="num" set:html={tex(e ? `$q^{${e}}$` : '$1$')} />)}</tr></thead>
+                  <tbody>
+                    {exRows.map((r) => <tr><td set:html={tex(r.name)} /><td class="num" set:html={tex(r.weight)} />{r.series.map((c) => <td class="num" set:html={tex(n$(c))} />)}</tr>)}
+                    <tr class="border-t-2 border-ink"><td>{t.sum}</td><td />{ex.coefficients.map((c, e) => <td class:list={['num', e > 0 && e < 3 && 'bg-accent-soft']} set:html={tex(n$(c as bigint))} />)}</tr>
+                  </tbody>
+                </table>
+              </div>
+              <figcaption class="note max-w-prose" set:html={tex(t.excap)} />
+            </figure>
+          )}
+        </>
+      ))}
       {id === 'bound' && (
         <figure class="grid gap-2">
           <div class="overflow-x-auto">
