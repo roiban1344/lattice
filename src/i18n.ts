@@ -28,6 +28,10 @@ export const UI = {
   prev: { en: 'Previous', ja: '前の頁' },
   next: { en: 'Next', ja: '次の頁' },
   draft: { en: 'This page is being written.', ja: 'この頁は執筆中です。' },
+  wip: {
+    en: 'This website is being rewritten. Pages not yet written are marked as such.',
+    ja: 'このウェブサイトは書き直しの途中です。まだ書かれていない頁には、その旨を記しています。',
+  },
   footer: {
     en: 'Most of the exploration, code, computation and writing was done by AI (Claude, Anthropic). Direction and responsibility for publication: roiban1344. Text and data are licensed under CC BY 4.0.',
     ja: '探索・コード・計算・文章の大部分は AI（Anthropic の Claude）によるものです。方向づけと公開の責任は roiban1344 にあります。文章とデータは CC BY 4.0 で公開しています。',
