@@ -1,0 +1,49 @@
+---
+// 平面の六角格子と、各点に置いた半径 ½√min の円板（生成時に SVG を組む）。中央の円板と、それに接する 6 枚を区別し、
+// 基底 b₁, b₂ と基本領域（点線の平行四辺形）を描く。
+interface Props { label: string; caption: string }
+const { label, caption } = Astro.props;
+
+const u = 56; // 最小ベクトルの長さ（ピクセル）。円板の半径は u/2。
+const W = 520, H = 330, cx = W / 2, cy = H / 2;
+const b1 = [u, 0], b2 = [u / 2, -(u * Math.sqrt(3)) / 2];
+const pts: { x: number; y: number; k: 'center' | 'touch' | 'other' }[] = [];
+for (let i = -8; i <= 8; i++)
+  for (let j = -6; j <= 6; j++) {
+    const x = cx + i * b1[0] + j * b2[0], y = cy + i * b1[1] + j * b2[1];
+    if (x < -u || x > W + u || y < -u || y > H + u) continue;
+    const d = Math.hypot(x - cx, y - cy);
+    pts.push({ x, y, k: d < 1 ? 'center' : Math.abs(d - u) < 1 ? 'touch' : 'other' });
+  }
+const cell = [[0, 0], b1, [b1[0] + b2[0], b1[1] + b2[1]], b2].map(([x, y]) => `${cx + x},${cy + y}`).join(' ');
+const r = u / 2 - 0.6;
+---
+<figure class="grid gap-2">
+  <svg viewBox={`0 0 ${W} ${H}`} class="fig h-auto w-full max-w-[34rem] border border-rule bg-paper" role="img" aria-label={label}>
+    <defs>
+      <radialGradient id="dp-other" cx="35%" cy="30%" r="75%">
+        <stop offset="0%" stop-color="#ffffff" /><stop offset="100%" stop-color="#c9d3e3" />
+      </radialGradient>
+      <radialGradient id="dp-touch" cx="35%" cy="30%" r="75%">
+        <stop offset="0%" stop-color="#f3f6fc" /><stop offset="100%" stop-color="#8fa9d6" />
+      </radialGradient>
+      <radialGradient id="dp-center" cx="35%" cy="30%" r="75%">
+        <stop offset="0%" stop-color="#8fb0e8" /><stop offset="100%" stop-color="rgb(26,79,160)" />
+      </radialGradient>
+      <filter id="dp-shadow" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="1.5" dy="2.5" stdDeviation="2" flood-color="#000" flood-opacity="0.22" />
+      </filter>
+      <marker id="dp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="rgb(17,17,17)" />
+      </marker>
+    </defs>
+    {pts.map((p) => <circle cx={p.x} cy={p.y} r={r} fill={`url(#dp-${p.k})`} filter="url(#dp-shadow)" />)}
+    <polygon points={cell} fill="none" stroke="rgb(17,17,17)" stroke-width="1.4" stroke-dasharray="5 4" />
+    <line x1={cx} y1={cy} x2={cx + b1[0]} y2={cy + b1[1]} stroke="rgb(17,17,17)" stroke-width="1.8" marker-end="url(#dp-arrow)" />
+    <line x1={cx} y1={cy} x2={cx + b2[0]} y2={cy + b2[1]} stroke="rgb(17,17,17)" stroke-width="1.8" marker-end="url(#dp-arrow)" />
+    <text x={cx + b1[0] / 2} y={cy + 18} text-anchor="middle" font-size="17" font-style="italic">b<tspan dy="4" font-size="12" font-style="normal">1</tspan></text>
+    <text x={cx + b2[0] / 2 - 16} y={cy + b2[1] / 2} text-anchor="middle" font-size="17" font-style="italic">b<tspan dy="4" font-size="12" font-style="normal">2</tspan></text>
+    {pts.filter((p) => p.k !== 'other').map((p) => <circle cx={p.x} cy={p.y} r="2.2" fill="rgb(17,17,17)" />)}
+  </svg>
+  <figcaption class="note max-w-prose" set:html={caption} />
+</figure>
