@@ -2,13 +2,19 @@
 title: The theta series
 ---
 
-To study the short vectors of a lattice, we count them. Let $N_{2j}$ be the number of vectors of norm $2j$ in an even lattice $\Lambda$, and put these numbers into a power series
+For a lattice $\Lambda\subset\mathbb{R}^n$, the **theta series** is the function
 
 $$
-\theta_\Lambda(\tau)=\sum_{x\in\Lambda}q^{\langle x,x\rangle/2}=1+N_2\,q+N_4\,q^2+N_6\,q^3+\cdots,\qquad q=e^{2\pi i\tau},
+\theta_\Lambda(\tau)=\sum_{x\in\Lambda}e^{\pi i\tau\langle x,x\rangle},\qquad \tau\in\mathbb{H}=\{\tau\in\mathbb{C} : \operatorname{Im}\tau>0\}.
 $$
 
-where $\tau$ lies in the upper half-plane $\{\operatorname{Im}\tau>0\}$. This series is the **theta series** of $\Lambda$. For $E_8$ and the Leech lattice it begins
+Collecting the vectors of equal norm, we can write it as $\theta_\Lambda(\tau)=\sum_{k\ge0}N_k\,e^{\pi i\tau k}$, where $N_k$ is the number of vectors of norm $k$. For an even lattice only even norms occur, so with $q=e^{2\pi i\tau}$ the theta series is a power series in $q$ whose coefficients count vectors:
+
+$$
+\theta_\Lambda(\tau)=1+N_2\,q+N_4\,q^2+N_6\,q^3+\cdots .
+$$
+
+For $E_8$ and the Leech lattice it begins
 
 $$
 \begin{aligned}
@@ -17,22 +23,44 @@ $$
 \end{aligned}
 $$
 
-The theta series of an orthogonal sum is the product of the theta series: $\theta_{L\perp M}=\theta_L\,\theta_M$, because a vector of $L\perp M$ is a pair of vectors, one from each part, and its norm is the sum of their norms.
+For lattices $L$ and $M$, the theta series of the orthogonal sum $L\perp M$ is the product of their theta series. A vector of $L\perp M$ is a pair $(x,y)$ with $x\in L$ and $y\in M$, and its norm is $\langle x,x\rangle+\langle y,y\rangle$. So
 
-The theta series obeys two transformation rules. Since all norms are even, it is unchanged under $\tau\mapsto\tau+1$. The Poisson summation formula gives the second rule,
+$$
+\theta_{L\perp M}(\tau)=\sum_{x\in L}\sum_{y\in M}e^{\pi i\tau(\langle x,x\rangle+\langle y,y\rangle)}=\theta_L(\tau)\,\theta_M(\tau).
+$$
+
+The theta series of an even unimodular lattice obeys two transformation rules. First, since $\langle x,x\rangle$ is even, $e^{\pi i\langle x,x\rangle}=1$ for every $x$, and therefore
+
+$$
+\theta_\Lambda(\tau+1)=\sum_{x\in\Lambda}e^{\pi i\tau\langle x,x\rangle}\,e^{\pi i\langle x,x\rangle}=\theta_\Lambda(\tau).
+$$
+
+Second, the Poisson summation formula gives, for any lattice,
 
 $$
 \theta_\Lambda\!\left(-\frac1\tau\right)=\left(\frac{\tau}{i}\right)^{n/2}\frac{1}{\sqrt{\det\Lambda}}\;\theta_{\Lambda^{\#}}(\tau),
 $$
 
-in which the dual lattice appears on the right [[Ser73, Ch. VII, §6]](#ref-Ser73). For a unimodular lattice $\Lambda^{\#}=\Lambda$ and $\det\Lambda=1$, so the same function appears on both sides. This is the reason for requiring unimodularity: the theta series of an even unimodular lattice transforms into itself under $\tau\mapsto\tau+1$, and into itself times the factor $(\tau/i)^{n/2}$ under $\tau\mapsto-1/\tau$:
+with the dual lattice on the right [[Ser73, Ch. VII, §6]](#ref-Ser73). For a unimodular lattice $\Lambda^{\#}=\Lambda$ and $\det\Lambda=1$, so the same function appears on both sides:
 
 $$
-\theta_\Lambda(\tau+1)=\theta_\Lambda(\tau),\qquad \theta_\Lambda\!\left(-\frac1\tau\right)=\left(\frac{\tau}{i}\right)^{n/2}\theta_\Lambda(\tau).
+\theta_\Lambda\!\left(-\frac1\tau\right)=\left(\frac{\tau}{i}\right)^{n/2}\theta_\Lambda(\tau).
 $$
 
-These two rules already force $n$ to be a multiple of $8$. Combining them, $\tau\mapsto-1/(\tau+1)$ multiplies $\theta_\Lambda$ by the factor $\bigl((\tau+1)/i\bigr)^{n/2}$. Applying this map three times brings every $\tau$ back to itself, so the three factors collected on the way must multiply to $1$. At the point $\tau=e^{2\pi i/3}$, which the map leaves fixed, each factor equals $e^{-2\pi i n/24}$, and their product is $e^{-2\pi i n/8}$. This is $1$ only if $n$ is a multiple of $8$.
+This is why unimodularity is required: it makes the theta series transform into itself, up to an explicit factor.
 
-> **Theorem.** The theta series of an even unimodular lattice of dimension $n$ is a modular form of weight $n/2$ for $\mathrm{SL}_2(\mathbb{Z})$ [[Ser73, Ch. VII, §6]](#ref-Ser73).
+These two rules already force $n$ to be a multiple of $8$. Combining them, the map $U(\tau)=-1/(\tau+1)$ acts on the theta series by
 
-For a fixed weight, the modular forms of that weight form a finite-dimensional vector space. This is what makes the theorem useful: the numbers $N_2,N_4,\dots$ cannot be arbitrary.
+$$
+\theta_\Lambda\bigl(U(\tau)\bigr)=A(\tau)\,\theta_\Lambda(\tau),\qquad A(\tau)=\left(\frac{\tau+1}{i}\right)^{n/2}.
+$$
+
+Applying $U$ three times returns every point to itself: $U(U(U(\tau)))=\tau$. Hence
+
+$$
+\theta_\Lambda(\tau)=A\bigl(U(U(\tau))\bigr)\,A\bigl(U(\tau)\bigr)\,A(\tau)\;\theta_\Lambda(\tau),
+$$
+
+and since $\theta_\Lambda$ is not identically zero and the factors depend continuously on $\tau$, the product of the three factors is $1$ for every $\tau$. Now take $\rho=e^{2\pi i/3}$. Then $U(\rho)=\rho$, and $(\rho+1)/i=e^{-\pi i/6}$, so each factor equals $A(\rho)=e^{-\pi i n/12}$. Therefore $e^{-\pi i n/4}=1$, which means that $n$ is a multiple of $8$.
+
+Once $n$ is a multiple of $8$, the factor $(\tau/i)^{n/2}$ is simply $\tau^{n/2}$. A holomorphic function on $\mathbb{H}$ that is unchanged under $\tau\mapsto\tau+1$, is multiplied by $\tau^{k}$ under $\tau\mapsto-1/\tau$, and stays bounded as $\operatorname{Im}\tau\to\infty$ is called a **modular form** of weight $k$. So the theta series of an even unimodular lattice of dimension $n$ is a modular form of weight $n/2$ [[Ser73, Ch. VII, §6]](#ref-Ser73). This matters because, for a fixed weight, the modular forms of that weight form a vector space of small dimension. As the next section shows, this leaves little freedom for the numbers $N_2,N_4,\dots$.

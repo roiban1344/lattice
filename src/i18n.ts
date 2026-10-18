@@ -11,7 +11,7 @@ export const SITE_NAME: Record<Lang, string> = {
 
 /** 読む順に並べた頁。slug は両言語で共通。題は仮のもので、本文を書くときに見直す。 */
 export const PAGES: { slug: string; title: Record<Lang, string> }[] = [
-  { slug: 'extremal-lattices', title: { en: 'Extremal lattices', ja: '極値格子とは' } },
+  { slug: 'extremal-lattices', title: { en: 'Extremal even unimodular lattices', ja: '極値偶ユニモジュラー格子とは' } },
   { slug: 'history', title: { en: 'History', ja: '歴史' } },
   { slug: 'constructions', title: { en: 'Constructions', ja: '構成法' } },
   { slug: 'proving-extremality', title: { en: 'Proving extremality', ja: '極値性の証明' } },

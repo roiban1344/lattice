@@ -1,6 +1,6 @@
 ---
-// 平面の六角格子と、各点に置いた半径 ½√min の円板（生成時に SVG を組む）。中央の円板と、それに接する 6 枚を区別し、
-// 基底 b₁, b₂ と基本領域（点線の平行四辺形）を描く。
+// 平面の六角格子と、各点に置いた半径 ½√min の円板（生成時に SVG を組む）。影や陰影は付けず、平らに塗る。中央の円板と、それに接する 6 枚を区別し、
+// 基底 b₁, b₂ と基本領域（破線の平行四辺形）を描く。
 interface Props { label: string; caption: string }
 const { label, caption } = Astro.props;
 
@@ -17,27 +17,16 @@ for (let i = -8; i <= 8; i++)
   }
 const cell = [[0, 0], b1, [b1[0] + b2[0], b1[1] + b2[1]], b2].map(([x, y]) => `${cx + x},${cy + y}`).join(' ');
 const r = u / 2 - 0.6;
+const fill = { other: '#eef1f6', touch: '#c4d3ec', center: '#7d9fd6' };
 ---
-<figure class="grid gap-2">
-  <svg viewBox={`0 0 ${W} ${H}`} class="fig h-auto w-full max-w-[34rem] border border-rule bg-paper" role="img" aria-label={label}>
+<figure class="mx-auto grid w-full max-w-[34rem] gap-2">
+  <svg viewBox={`0 0 ${W} ${H}`} class="fig h-auto w-full border border-rule bg-paper" role="img" aria-label={label}>
     <defs>
-      <radialGradient id="dp-other" cx="35%" cy="30%" r="75%">
-        <stop offset="0%" stop-color="#ffffff" /><stop offset="100%" stop-color="#c9d3e3" />
-      </radialGradient>
-      <radialGradient id="dp-touch" cx="35%" cy="30%" r="75%">
-        <stop offset="0%" stop-color="#f3f6fc" /><stop offset="100%" stop-color="#8fa9d6" />
-      </radialGradient>
-      <radialGradient id="dp-center" cx="35%" cy="30%" r="75%">
-        <stop offset="0%" stop-color="#8fb0e8" /><stop offset="100%" stop-color="rgb(26,79,160)" />
-      </radialGradient>
-      <filter id="dp-shadow" x="-30%" y="-30%" width="160%" height="160%">
-        <feDropShadow dx="1.5" dy="2.5" stdDeviation="2" flood-color="#000" flood-opacity="0.22" />
-      </filter>
       <marker id="dp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 z" fill="rgb(17,17,17)" />
       </marker>
     </defs>
-    {pts.map((p) => <circle cx={p.x} cy={p.y} r={r} fill={`url(#dp-${p.k})`} filter="url(#dp-shadow)" />)}
+    {pts.map((p) => <circle cx={p.x} cy={p.y} r={r} fill={fill[p.k]} stroke="rgb(120,135,160)" stroke-width="0.8" />)}
     <polygon points={cell} fill="none" stroke="rgb(17,17,17)" stroke-width="1.4" stroke-dasharray="5 4" />
     <line x1={cx} y1={cy} x2={cx + b1[0]} y2={cy + b1[1]} stroke="rgb(17,17,17)" stroke-width="1.8" marker-end="url(#dp-arrow)" />
     <line x1={cx} y1={cy} x2={cx + b2[0]} y2={cy + b2[1]} stroke="rgb(17,17,17)" stroke-width="1.8" marker-end="url(#dp-arrow)" />

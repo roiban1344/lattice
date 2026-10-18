@@ -20,4 +20,5 @@ export const refs: Record<string, { text: string; url?: string; link?: string }>
   CKMRV17: { text: 'H. Cohn, A. Kumar, S. D. Miller, D. Radchenko, M. Viazovska, The sphere packing problem in dimension 24, Ann. of Math. 185 (2017) 1017–1033.', url: 'https://arxiv.org/abs/1603.06518', link: 'arXiv:1603.06518' },
   Lee67: { text: 'J. Leech, Notes on sphere packings, Canad. J. Math. 19 (1967) 251–267.', url: 'https://doi.org/10.4153/CJM-1967-017-0', link: 'doi' },
   Con69: { text: "J. H. Conway, A characterisation of Leech's lattice, Invent. Math. 7 (1969) 137–142.", url: 'https://doi.org/10.1007/BF01389796', link: 'doi' },
+  Kin03: { text: 'O. D. King, A mass formula for unimodular lattices with no roots, Math. Comp. 72 (2003) 839–863.', url: 'https://doi.org/10.1090/S0025-5718-02-01455-2', link: 'doi' },
 };
