@@ -8,7 +8,7 @@ $$
 \theta_\Lambda(\tau)=\sum_{x\in\Lambda}q^{\langle x,x\rangle/2}=1+N_2\,q+N_4\,q^2+N_6\,q^3+\cdots,\qquad q=e^{2\pi i\tau},
 $$
 
-where $\tau$ lies in the upper half-plane. This is the **theta series** of $\Lambda$. For $E_8$ and the Leech lattice it begins
+where $\tau$ lies in the upper half-plane $\{\operatorname{Im}\tau>0\}$. This series is the **theta series** of $\Lambda$. For $E_8$ and the Leech lattice it begins
 
 $$
 \begin{aligned}
@@ -19,13 +19,13 @@ $$
 
 The theta series of an orthogonal sum is the product of the theta series: $\theta_{L\perp M}=\theta_L\,\theta_M$, because a vector of $L\perp M$ is a pair of vectors, one from each part, and its norm is the sum of their norms.
 
-The theta series has two symmetries. Since all norms are even, it is unchanged under $\tau\mapsto\tau+1$. The Poisson summation formula gives the second one,
+The theta series obeys two transformation rules. Since all norms are even, it is unchanged under $\tau\mapsto\tau+1$. The Poisson summation formula gives the second rule,
 
 $$
 \theta_\Lambda\!\left(-\frac1\tau\right)=\left(\frac{\tau}{i}\right)^{n/2}\frac{1}{\sqrt{\det\Lambda}}\;\theta_{\Lambda^{\#}}(\tau),
 $$
 
-in which the dual lattice appears on the right [[Ser73, Ch. VII, §6]](#ref-Ser73). For a unimodular lattice $\Lambda^{\#}=\Lambda$ and $\det\Lambda=1$, so the same function appears on both sides. This is the reason for requiring unimodularity: an even unimodular lattice has a theta series that transforms into itself under both $\tau\mapsto\tau+1$ and $\tau\mapsto-1/\tau$,
+in which the dual lattice appears on the right [[Ser73, Ch. VII, §6]](#ref-Ser73). For a unimodular lattice $\Lambda^{\#}=\Lambda$ and $\det\Lambda=1$, so the same function appears on both sides. This is the reason for requiring unimodularity: the theta series of an even unimodular lattice transforms into itself under $\tau\mapsto\tau+1$, and into itself times the factor $(\tau/i)^{n/2}$ under $\tau\mapsto-1/\tau$:
 
 $$
 \theta_\Lambda(\tau+1)=\theta_\Lambda(\tau),\qquad \theta_\Lambda\!\left(-\frac1\tau\right)=\left(\frac{\tau}{i}\right)^{n/2}\theta_\Lambda(\tau).
@@ -35,4 +35,4 @@ These two rules already force $n$ to be a multiple of $8$. Combining them, $\tau
 
 > **Theorem.** The theta series of an even unimodular lattice of dimension $n$ is a modular form of weight $n/2$ for $\mathrm{SL}_2(\mathbb{Z})$ [[Ser73, Ch. VII, §6]](#ref-Ser73).
 
-Modular forms of a given weight form a finite-dimensional vector space. This is what makes the theorem useful: the numbers $N_2,N_4,\dots$ cannot be arbitrary.
+For a fixed weight, the modular forms of that weight form a finite-dimensional vector space. This is what makes the theorem useful: the numbers $N_2,N_4,\dots$ cannot be arbitrary.

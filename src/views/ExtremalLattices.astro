@@ -63,18 +63,18 @@ const t = {
   leech: { en: 'Gram matrix of the Leech lattice Λ₂₄ (24×24)', ja: 'Leech 格子 Λ₂₄ の Gram 行列（24×24）' }[lang],
   leechcap: {
     en: String.raw`From the construction with the extended Golay code <a href="#ref-SPLAG">[SPLAG, Ch. 4]</a>. The diagonal entries are $4$, and $\det G=1$ (computed when the page is built).`,
-    ja: String.raw`拡大 Golay 符号を用いた構成による Gram 行列です <a href="#ref-SPLAG">[SPLAG, Ch. 4]</a>。対角成分はすべて $4$ で、$\det G=1$ です（頁の生成時に計算）。`,
+    ja: String.raw`拡張 Golay 符号を用いた構成による Gram 行列です <a href="#ref-SPLAG">[SPLAG, Ch. 4]</a>。対角成分はすべて $4$ で、$\det G=1$ です（頁の生成時に計算）。`,
   }[lang],
   disk: { en: 'Disks centred at the points of the hexagonal lattice in the plane', ja: '平面の六角格子の各点を中心とする円板' }[lang],
   diskcap: {
-    en: String.raw`The same picture in dimension $2$: the hexagonal lattice with disks of radius $\tfrac12\sqrt{\min\Lambda}$. The dark disk touches six others, so the kissing number is $6$. The dashed parallelogram is the fundamental cell spanned by the basis vectors $b_1,b_2$; its area equals the area per disk, and the disks fill $\pi/\sqrt{12}\approx 90.7\%$ of the plane.`,
-    ja: String.raw`同じことを $2$ 次元で描いた図です。平面の六角格子の各点に、半径 $\tfrac12\sqrt{\min\Lambda}$ の円板を置いています。濃い色の円板は $6$ 枚の円板に接しているので、接吻数は $6$ です。点線の平行四辺形は基底 $b_1,b_2$ が張る基本領域で、その面積は円板 $1$ 枚あたりの面積に等しく、円板は平面の $\pi/\sqrt{12}\approx 90.7\%$ を占めます。`,
+    en: String.raw`The same picture in dimension $2$: the hexagonal lattice with disks of radius $\tfrac12\sqrt{\min\Lambda}$. The dark disk touches six others, so the kissing number is $6$. The dashed parallelogram is the fundamental cell spanned by the basis vectors $b_1,b_2$; its area is the area of the plane per disk, and the disks fill $\pi/\sqrt{12}\approx 90.7\%$ of the plane.`,
+    ja: String.raw`同じことを $2$ 次元で描いた図です。平面の六角格子の各点に、半径 $\tfrac12\sqrt{\min\Lambda}$ の円板を置いています。濃い色の円板は $6$ 枚の円板に接しているので、接吻数は $6$ です。破線の平行四辺形は基底 $b_1,b_2$ が張る基本領域で、その面積は円板 $1$ 枚あたりに割り当てられる平面の面積に等しく、円板は平面の $\pi/\sqrt{12}\approx 90.7\%$ を占めます。`,
   }[lang],
-  weight: { en: 'weight', ja: '重み' }[lang],
+  weight: '$\\lambda$',
   sum: { en: 'sum', ja: '和' }[lang],
   excap: {
-    en: String.raw`Dimension $48$. Each row lists the first coefficients of a product of theta series; the last row is the sum of the rows multiplied by their weights. The weights are chosen so that the shaded coefficients vanish. Computed in exact rational arithmetic when the page is built.`,
-    ja: String.raw`$48$ 次元の場合です。各行はテータ級数の積の最初の係数で、最後の行は各行に重みを掛けて足したものです。網掛けの係数が $0$ になるように重みを選んでいます。頁の生成時に有理数で厳密に計算しています。`,
+    en: String.raw`Dimension $48$. Each row lists the first coefficients of a product of theta series; the last row is the sum of the rows, each multiplied by the number $\lambda$ in the second column. The numbers $\lambda$ are chosen so that the shaded coefficients vanish. Computed in exact rational arithmetic when the page is built.`,
+    ja: String.raw`$48$ 次元の場合です。各行には、テータ級数の積を $q$ で展開したときの最初のいくつかの係数を並べています。最後の行は、各行に第 $2$ 列の数 $\lambda$ を掛けて足したものです。網掛けの係数が $0$ になるように $\lambda$ を選んでいます。頁の生成時に有理数で厳密に計算しています。`,
   }[lang],
   head: { en: [String.raw`dimension $n$`, String.raw`bound $2\lfloor n/24\rfloor+2$`, 'vectors of minimal norm'], ja: [String.raw`次元 $n$`, String.raw`上界 $2\lfloor n/24\rfloor+2$`, '最小ノルムのベクトルの本数'] }[lang].map(tex),
   cap: {
@@ -106,7 +106,7 @@ const refKeys = ['Ser73', 'Nie73', 'Lee67', 'Con69', 'SPLAG', 'Sie69', 'MOS75', 
             <figure class="grid gap-2">
               <div class="overflow-x-auto">
                 <table class="tbl text-[1rem]">
-                  <thead><tr><th /><th class="num">{t.weight}</th>{[0, 1, 2, 3, 4].map((e) => <th class="num" set:html={tex(e ? `$q^{${e}}$` : '$1$')} />)}<th /></tr></thead>
+                  <thead><tr><th /><th class="num" set:html={tex(t.weight)} />{[0, 1, 2, 3, 4].map((e) => <th class="num" set:html={tex(e ? `$q^{${e}}$` : '$1$')} />)}<th /></tr></thead>
                   <tbody>
                     {exRows.map((r) => <tr><td set:html={tex(r.name)} /><td class="num" set:html={tex(r.weight)} />{r.series.map((c) => <td class="num" set:html={tex(n$(c))} />)}<td set:html={tex('$\\cdots$')} /></tr>)}
                     <tr class="border-t-2 border-ink"><td>{t.sum}</td><td />{ex.coefficients.map((c, e) => <td class:list={['num', e > 0 && e < 3 && 'bg-accent-soft']} set:html={tex(n$(c as bigint))} />)}<td set:html={tex('$\\cdots$')} /></tr>
