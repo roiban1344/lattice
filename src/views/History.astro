@@ -19,20 +19,20 @@ const classical = { en: 'classical', ja: '古くから知られる' };
 const none = { en: 'none known', ja: '知られていない' };
 const dash = { en: '—', ja: '—' };
 const rows: Row[] = [
-  { n: 8, examples: { en: String.raw`$E_8$ (the only one)`, ja: String.raw`$E_8$（これだけ）` }, first: classical },
-  { n: 16, examples: { en: String.raw`$E_8\perp E_8$, $D_{16}^{+}$ (all)`, ja: String.raw`$E_8\perp E_8$、$D_{16}^{+}$（これで全部）` }, first: classical },
-  { n: 24, examples: { en: String.raw`Leech lattice $\Lambda_{24}$ (the only one)`, ja: String.raw`Leech 格子 $\Lambda_{24}$（これだけ）` }, first: { en: `Leech 1967 ${ref('Lee67')}`, ja: `Leech 1967 ${ref('Lee67')}` } },
+  { n: 8, examples: { en: String.raw`$E_8$ (the only one)`, ja: String.raw`$E_8$（唯一の例）` }, first: classical },
+  { n: 16, examples: { en: String.raw`$E_8\perp E_8$, $D_{16}^{+}$ (all)`, ja: String.raw`$E_8\perp E_8$、$D_{16}^{+}$（この $2$ つに限られます）` }, first: classical },
+  { n: 24, examples: { en: String.raw`Leech lattice $\Lambda_{24}$ (the only one)`, ja: String.raw`Leech 格子 $\Lambda_{24}$（唯一の例）` }, first: { en: `Leech 1967 ${ref('Lee67')}`, ja: `Leech 1967 ${ref('Lee67')}` } },
   { n: 32, examples: { en: String.raw`more than $10^7$ ${ref('Kin03', ', Cor. 5')}`, ja: String.raw`$10^7$ 個以上 ${ref('Kin03', ', Cor. 5')}` }, first: dash },
   { n: 40, examples: { en: String.raw`more than $10^{51}$ ${ref('Sak26', ', §1')}`, ja: String.raw`$10^{51}$ 個以上 ${ref('Sak26', ', §1')}` }, first: dash },
-  { n: 48, examples: { en: String.raw`at least $4$: $P_{48p}$, $P_{48q}$, $P_{48n}$, $P_{48m}$`, ja: String.raw`$4$ 個以上: $P_{48p}$、$P_{48q}$、$P_{48n}$、$P_{48m}$` }, first: { en: `Leech–Sloane 1971 ${ref('LS71')}`, ja: `Leech–Sloane 1971 ${ref('LS71')}` } },
+  { n: 48, examples: { en: String.raw`at least $4$: $P_{48p}$, $P_{48q}$, $P_{48n}$, $P_{48m}$`, ja: String.raw`$4$ 個以上：$P_{48p}$、$P_{48q}$、$P_{48n}$、$P_{48m}$` }, first: { en: `Leech–Sloane 1971 ${ref('LS71')}`, ja: `Leech–Sloane 1971 ${ref('LS71')}` } },
   { n: 56, examples: { en: 'several', ja: '複数' }, first: { en: `Ozeki 1989 ${ref('Oze89')}`, ja: `Ozeki 1989 ${ref('Oze89')}` } },
   { n: 64, examples: { en: 'many', ja: '多数' }, first: { en: `Quebbemann 1984 ${ref('Que84')}`, ja: `Quebbemann 1984 ${ref('Que84')}` } },
-  { n: 72, examples: { en: String.raw`at least $1$: $\Gamma_{72}$`, ja: String.raw`$1$ 個以上: $\Gamma_{72}$` }, first: { en: `Nebe 2010 ${ref('Neb12')}`, ja: `Nebe 2010 ${ref('Neb12')}` } },
+  { n: 72, examples: { en: String.raw`at least $1$: $\Gamma_{72}$`, ja: String.raw`$1$ 個以上：$\Gamma_{72}$` }, first: { en: `Nebe 2010 ${ref('Neb12')}`, ja: `Nebe 2010 ${ref('Neb12')}` } },
   { n: 80, examples: { en: String.raw`at least $4$`, ja: String.raw`$4$ 個以上` }, first: { en: `Bachoc–Nebe 1998 ${ref('BN98')}`, ja: `Bachoc–Nebe 1998 ${ref('BN98')}` } },
-  { n: 88, examples: { en: String.raw`at least $2$ (preprint)`, ja: String.raw`$2$ 個以上（プレプリント）` }, first: { en: `Sakamoto 2026 ${ref('Sak26')}`, ja: `坂本 2026 ${ref('Sak26')}` } },
+  { n: 88, examples: { en: String.raw`at least $2$ (preprint)`, ja: String.raw`$2$ 個以上（プレプリント）` }, first: { en: `Sakamoto 2026 ${ref('Sak26')}`, ja: `Sakamoto 2026 ${ref('Sak26')}` } },
   { n: 96, examples: none, first: dash },
   { n: 104, examples: none, first: dash },
-  { n: 112, examples: { en: String.raw`at least $1$: $L_{112}$ (preprint)`, ja: String.raw`$1$ 個以上: $L_{112}$（プレプリント）` }, first: { en: `2026 ${ref('L112')}`, ja: `2026 ${ref('L112')}` } },
+  { n: 112, examples: { en: String.raw`at least $1$: $L_{112}$ (preprint)`, ja: String.raw`$1$ 個以上：$L_{112}$（プレプリント）` }, first: { en: `2026 ${ref('L112')}`, ja: `2026 ${ref('L112')}` } },
   { n: 120, examples: none, first: dash },
 ];
 const bound = (n: number) => 2 * Math.floor(n / 24) + 2;
@@ -44,24 +44,24 @@ const pts = [
   { n: 64, year: 1984, en: 'Quebbemann', ja: 'Quebbemann' },
   { n: 72, year: 2010, en: 'Nebe', ja: 'Nebe' },
   { n: 80, year: 1998, en: 'Bachoc–Nebe', ja: 'Bachoc–Nebe' },
-  { n: 88, year: 2026, en: 'Sakamoto', ja: '坂本' },
+  { n: 88, year: 2026, en: 'Sakamoto', ja: 'Sakamoto' },
   { n: 112, year: 2026, en: 'L₁₁₂', ja: 'L₁₁₂' },
 ].map((p) => ({ n: p.n, year: p.year, label: `${p.n}: ${p[lang]}`, tip: { en: `dimension ${p.n}: ${p.en}, ${p.year}`, ja: `${p.n} 次元: ${p.ja}、${p.year} 年` }[lang] }));
 
 const t = {
-  head: { en: [String.raw`dimension $n$`, 'bound', 'known extremal lattices', 'first published'], ja: [String.raw`次元 $n$`, '上界', '知られている極値格子', '最初の例'] }[lang],
+  head: { en: [String.raw`dimension $n$`, 'bound', 'known extremal lattices', 'first made public'], ja: [String.raw`次元 $n$`, '上界', '知られている極値格子', '最初の公開'] }[lang],
   cap: {
-    en: String.raw`Known extremal even unimodular lattices. "At least" means that further examples may exist. Historical attributions follow ${ref('Sak26', ', §1')} and the original papers.`,
-    ja: String.raw`知られている極値偶ユニモジュラー格子です。「以上」は、ほかにも例がありうることを表します。歴史的な帰属は ${ref('Sak26', ', §1')} と各原論文によります。`,
+    en: String.raw`Known extremal even unimodular lattices. "At least" means that further examples may exist. For dimension $72$ the year is that of the preprint. Who found what and when follows ${ref('Sak26', ', §1')} and the original papers.`,
+    ja: String.raw`知られている極値偶ユニモジュラー格子です。「以上」は、ほかにも例がありうることを表します。$72$ 次元の年はプレプリントの年です。誰がいつ見つけたかは、${ref('Sak26', ', §1')} と各原論文に基づいています。`,
   }[lang],
   chart: {
     aria: { en: 'Year of the first extremal lattice in each dimension', ja: '各次元で最初の極値格子が発表された年' }[lang],
-    x: { en: 'year of publication', ja: '発表の年' }[lang],
+    x: { en: 'year made public', ja: '公開の年' }[lang],
     y: { en: 'dimension', ja: '次元' }[lang],
     open: { en: 'open', ja: '未解決' }[lang],
     cap: {
-      en: 'Year in which the first extremal lattice of each dimension was published (for dimension 72, the preprint). Hollow points on the right: dimensions in which none is known. Grey lines mark the multiples of 24, where the bound rises.',
-      ja: '各次元で最初の極値格子が発表された年です（72 次元はプレプリントの年）。右端の白抜きの点は、例が知られていない次元です。灰色の線は、上界が上がる $24$ の倍数の次元を示します。',
+      en: 'Year in which the first extremal lattice of each dimension became public (for dimension 72, the preprint). Hollow points on the right: dimensions in which none is known. Grey lines mark the multiples of 24, where the bound rises.',
+      ja: '各次元で最初の極値格子が公開された年です（$72$ 次元はプレプリントの年）。右端の白抜きの点は、例が知られていない次元です。灰色の線は、上界が上がる $24$ の倍数の次元を示します。',
     }[lang],
   },
 };
